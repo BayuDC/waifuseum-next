@@ -1,5 +1,5 @@
 import Fastify, { FastifyInstance } from 'fastify';
-import fastifyMongodb, { FastifyMongodbOptions } from '@fastify/mongodb';
+import { FastifyMongodbOptions } from '@fastify/mongodb';
 
 const port = process.env.PORT || 8080;
 const host = process.env.NODE_ENV == 'production' ? '0.0.0.0' : '127.0.0.1';
@@ -12,6 +12,7 @@ fastify.register(require('@fastify/mongodb'), {
 } as FastifyMongodbOptions);
 
 fastify.register(require('./routes/main'));
+fastify.register(require('./routes/album'));
 
 fastify.listen({ port: port as number, host }, (err, addr) => {
     if (err) {
