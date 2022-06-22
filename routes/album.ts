@@ -1,9 +1,9 @@
 import { FastifyInstance, RouteShorthandOptionsWithHandler } from 'fastify';
 
+import handler from '../handlers/album';
+
 export default async function (fastify: FastifyInstance) {
     fastify.get('/albums', {
-        async handler(req, reply) {
-            return await this.mongo.db?.collection('albums').find().toArray();
-        },
+        handler: handler.index,
     } as RouteShorthandOptionsWithHandler);
 }
