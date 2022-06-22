@@ -1,0 +1,22 @@
+{
+  "name": "waifuseum-lite",
+  "version": "0.0.0",
+  "description": "Smaller and faster version of Waifuseum API",
+  "scripts": {
+    "start": "node build/server.js",
+    "dev": "ts-node -r dotenv/config server.ts",
+    "build": "tsc"
+  },
+  "repository": "https://github.com/BayuDC/waifuseum-lite.git",
+  "author": "BayuDC <dev.bayudc@gmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "fastify": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "16",
+    "dotenv": "^16.0.1",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
+}
