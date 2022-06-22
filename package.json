@@ -7,10 +7,14 @@
     "dev": "ts-node -r dotenv/config server.ts",
     "build": "tsc"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "repository": "https://github.com/BayuDC/waifuseum-lite.git",
   "author": "BayuDC <dev.bayudc@gmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@fastify/mongodb": "^6.0.1",
     "fastify": "^4.1.0"
   },
   "devDependencies": {
