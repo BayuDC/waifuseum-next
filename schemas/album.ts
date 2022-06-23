@@ -1,6 +1,12 @@
 import { FastifySchema } from 'fastify';
 
 export default {
+    querystring: {
+        type: 'object',
+        properties: {
+            full: {},
+        },
+    },
     response: {
         default: {
             albums: {
@@ -13,6 +19,8 @@ export default {
                         slug: { type: 'string' },
                         private: { type: 'boolean' },
                         community: { type: 'boolean' },
+                        createdBy: { type: 'string' },
+                        createdAt: { type: 'string' },
                     },
                 },
             },
