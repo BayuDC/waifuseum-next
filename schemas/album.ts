@@ -19,7 +19,14 @@ export default {
                         slug: { type: 'string' },
                         private: { type: 'boolean' },
                         community: { type: 'boolean' },
-                        createdBy: { type: 'string' },
+                        picturesCount: { type: 'number' },
+                        createdBy: {
+                            type: 'object',
+                            properties: {
+                                id: { type: 'string' },
+                                name: { type: 'string' },
+                            },
+                        },
                         createdAt: { type: 'string' },
                     },
                 },
