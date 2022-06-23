@@ -5,12 +5,14 @@ specifiers:
   '@types/node': '16'
   dotenv: ^16.0.1
   fastify: ^4.1.0
+  fastify-plugin: ^3.0.1
   ts-node: ^10.8.1
   typescript: ^4.7.4
 
 dependencies:
   '@fastify/mongodb': 6.0.1
   fastify: 4.1.0
+  fastify-plugin: 3.0.1
 
 devDependencies:
   '@types/node': 16.11.41
