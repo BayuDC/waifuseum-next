@@ -14,6 +14,7 @@
   "author": "BayuDC <dev.bayudc@gmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@fastify/cors": "^8.0.0",
     "@fastify/mongodb": "^6.0.1",
     "fastify": "^4.1.0",
     "fastify-plugin": "^3.0.1"
