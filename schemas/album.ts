@@ -20,7 +20,15 @@ const albumShema = {
     },
 };
 
-export default {
+const index: FastifySchema = {
+    response: {
+        '2xx': {
+            albums: { type: 'array', items: albumShema },
+        },
+    },
+};
+
+const show: FastifySchema = {
     params: {
         type: 'object',
         properties: {
@@ -29,11 +37,12 @@ export default {
     },
     response: {
         '2xx': {
-            albums: {
-                type: 'array',
-                items: albumShema,
-            },
             album: albumShema,
         },
     },
-} as FastifySchema;
+};
+
+export default {
+    index,
+    show,
+};
