@@ -8,7 +8,10 @@ export default {
         return { albums };
     },
     async show(req: FastifyRequest) {
-        const album = await this.model.findById();
+        const { id } = req.params as { id: string };
+        const album = await this.model.findById(id);
+
+        if (!album) throw createError(404, 'Album not found');
 
         return { album };
     },
