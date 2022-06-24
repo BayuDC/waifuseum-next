@@ -9,18 +9,6 @@ const albumShema = {
         private: { type: 'boolean' },
         community: { type: 'boolean' },
         picturesCount: { type: 'number' },
-        pictures: {
-            type: 'array',
-            items: {
-                type: 'object',
-                properties: {
-                    id: { type: 'string' },
-                    url: { type: 'string' },
-                    source: { type: 'string' },
-                    createdAt: { type: 'string' },
-                },
-            },
-        },
         createdBy: {
             type: 'object',
             properties: {
@@ -33,19 +21,10 @@ const albumShema = {
 };
 
 export default {
-    querystring: {
-        type: 'object',
-        properties: {
-            full: {},
-            populate: {},
-        },
-    },
     params: {
         type: 'object',
         properties: {
-            id: {
-                type: 'string',
-            },
+            id: { type: 'string' },
         },
     },
     response: {
