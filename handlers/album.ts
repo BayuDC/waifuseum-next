@@ -3,9 +3,15 @@ import createError from 'http-errors';
 
 export default {
     async index(req: FastifyRequest) {
-        const { simple } = req.query as { simple: any };
+        const { simple, page, count } = req.query as {
+            simple: any;
+            page: number;
+            count: number;
+        };
         const albums = await this.model.findAll({
             simple: simple != undefined,
+            page,
+            count,
         });
 
         return { albums };

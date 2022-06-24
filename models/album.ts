@@ -3,7 +3,7 @@ import { FastifyInstance } from 'fastify';
 import { ObjectId } from '@fastify/mongodb';
 
 interface AlbumModel {
-    findAll(options: { simple: boolean }): Promise<Object[]>;
+    findAll(options: { simple: boolean; page?: number; count?: number }): Promise<Object[]>;
     findById(id: string): Promise<Object>;
     findPics(id: string): Promise<Object[]>;
 }
@@ -15,7 +15,10 @@ declare module 'fastify' {
 }
 
 export default fp(function (fastify: FastifyInstance, options: Object, done: Function) {
-    const find = async (filter?: Object, options?: { simple: boolean }): Promise<Object[] | undefined> => {
+    const find = async (
+        filter?: Object,
+        options?: { simple: boolean; page?: number; count?: number }
+    ): Promise<Object[] | undefined> => {
         const population: Object[] = options?.simple
             ? []
             : [
@@ -40,6 +43,10 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
                   },
                   { $unwind: '$pictures' },
               ];
+        const pagination: Object[] =
+            options?.count && options?.page
+                ? [{ $skip: options?.count * (options?.page - 1) }, { $limit: options?.count }]
+                : [];
         const projection: Object = options?.simple
             ? {}
             : {
@@ -52,6 +59,7 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
         const pipeline: Object[] = [
             { $match: { ...filter, private: false } },
             ...population,
+            ...pagination,
             { $project: { id: '$_id', _id: 0, name: 1, slug: 1, ...projection } },
         ];
 

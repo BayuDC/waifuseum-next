@@ -33,6 +33,8 @@ const index: FastifySchema = {
         type: 'object',
         properties: {
             simple: {},
+            page: { type: 'number', nullable: true },
+            count: { type: 'number', nullable: true },
         },
     },
     response: {
