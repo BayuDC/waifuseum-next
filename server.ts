@@ -15,6 +15,13 @@ fastify.register(require('@fastify/cors'));
 fastify.register(require('./routes/main'));
 fastify.register(require('./routes/album'));
 
+fastify.setErrorHandler((err, req, reply) => {
+    reply.status(err.statusCode || 500);
+    reply.send({
+        message: err.message || 'Somehting went wrong',
+    });
+});
+
 fastify.listen({ port: port as number, host }, (err, addr) => {
     if (err) {
         fastify.log.error(err);
