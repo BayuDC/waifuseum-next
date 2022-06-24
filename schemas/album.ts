@@ -19,6 +19,14 @@ const albumShema = {
         createdAt: { type: 'string' },
     },
 };
+const pictureSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+        url: { type: 'string' },
+        source: { type: 'string' },
+    },
+};
 
 const index: FastifySchema = {
     querystring: {
@@ -44,6 +52,7 @@ const show: FastifySchema = {
     response: {
         '2xx': {
             album: albumShema,
+            pictures: { type: 'array', items: pictureSchema },
         },
     },
 };

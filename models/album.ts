@@ -5,6 +5,7 @@ import { ObjectId } from '@fastify/mongodb';
 interface AlbumModel {
     findAll(options: { simple: boolean }): Promise<Object[]>;
     findById(id: string): Promise<Object>;
+    findPics(id: string): Promise<Object[]>;
 }
 
 declare module 'fastify' {
@@ -56,6 +57,12 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
 
         return await fastify.mongo.db?.collection('albums').aggregate(pipeline).toArray();
     };
+    const findPics = async (filter?: Object): Promise<Object[] | undefined> => {
+        return await fastify.mongo.db
+            ?.collection('pictures')
+            .aggregate([{ $match: filter }, { $project: { id: '$_id', _id: 0, url: 1, source: 1 } }])
+            .toArray();
+    };
 
     fastify.decorate('model', {
         async findAll(options) {
@@ -67,6 +74,13 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
             return ((await find({
                 _id: new ObjectId(id),
             })) || [])[0];
+        },
+        async findPics(id) {
+            if (!ObjectId.isValid(id)) return [];
+
+            const pictures = await findPics({ album: new ObjectId(id) });
+
+            return pictures;
         },
     } as AlbumModel);
 

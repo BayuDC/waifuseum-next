@@ -18,7 +18,14 @@ export default {
 
         return { album };
     },
+    async showPics(req: FastifyRequest) {
+        const { id } = req.params as { id: string };
+        const pictures = await this.model.findPics(id);
+
+        return { pictures };
+    },
 } as {
     index: RouteHandlerMethod;
     show: RouteHandlerMethod;
+    showPics: RouteHandlerMethod;
 };
