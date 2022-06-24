@@ -7,6 +7,13 @@ export default {
 
         return { albums };
     },
+    async show(req: FastifyRequest) {
+        const id = (req.params as { id: string }).id || '';
+        const album = await req.server.model.findById(id);
+
+        return { album };
+    },
 } as {
     index: RouteHandlerMethod;
+    show: RouteHandlerMethod;
 };

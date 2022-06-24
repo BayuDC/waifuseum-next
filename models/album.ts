@@ -1,8 +1,10 @@
 import fp from 'fastify-plugin';
 import { FastifyInstance } from 'fastify';
+import { ObjectId } from '@fastify/mongodb';
 
 interface AlbumModel {
-    find(full: Boolean): Promise<Object[] | undefined>;
+    find(full: Boolean, filter?: Object): Promise<Object[]>;
+    findById(id: string): Promise<Object[] | undefined>;
 }
 
 declare module 'fastify' {
@@ -13,11 +15,11 @@ declare module 'fastify' {
 
 export default fp(function (fastify: FastifyInstance, options: Object, done: Function) {
     fastify.decorate('model', {
-        async find(full) {
+        async find(full, filter = {}) {
             return await fastify.mongo.db
                 ?.collection('albums')
                 .aggregate([
-                    { $match: { private: false } },
+                    { $match: { ...filter, private: false } },
                     ...(full
                         ? [
                               {
@@ -50,6 +52,9 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
                     },
                 ])
                 .toArray();
+        },
+        async findById(id) {
+            return (await this.find(true, { _id: new ObjectId(id) }))[0];
         },
     } as AlbumModel);
 
