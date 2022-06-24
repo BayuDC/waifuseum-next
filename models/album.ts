@@ -3,8 +3,8 @@ import { FastifyInstance } from 'fastify';
 import { ObjectId } from '@fastify/mongodb';
 
 interface AlbumModel {
-    find(full: Boolean, filter?: Object): Promise<Object[]>;
-    findById(id: string): Promise<Object | undefined>;
+    findAll(full: boolean): Promise<Object[]>;
+    findById(id: string | ObjectId): Promise<Object | undefined>;
 }
 
 declare module 'fastify' {
@@ -14,13 +14,13 @@ declare module 'fastify' {
 }
 
 export default fp(function (fastify: FastifyInstance, options: Object, done: Function) {
-    fastify.decorate('model', {
-        async find(full, filter = {}) {
-            return await fastify.mongo.db
+    const find = async (filter: Object, options: { full?: boolean; populate?: boolean }): Promise<Object[]> => {
+        return (
+            (await fastify.mongo.db
                 ?.collection('albums')
                 .aggregate([
                     { $match: { ...filter, private: false } },
-                    ...(full
+                    ...(options.full
                         ? [
                               {
                                   $lookup: {
@@ -47,18 +47,25 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
                     {
                         $project: {
                             ...{ _id: 0, id: '$_id', name: 1, slug: 1, private: 1, community: 1 },
-                            ...(full ? { createdAt: 1, createdBy: 1, picturesCount: '$pictures.count' } : {}),
+                            ...(options.full ? { createdAt: 1, createdBy: 1, picturesCount: '$pictures.count' } : {}),
                         },
                     },
                 ])
-                .toArray();
+                .toArray()) || []
+        );
+    };
+
+    fastify.decorate('model', {
+        async findAll(full) {
+            return await find({}, { full });
         },
         async findById(id) {
             if (!ObjectId.isValid(id)) {
                 return undefined;
             }
+            id = new ObjectId(id);
 
-            return (await this.find(true, { _id: new ObjectId(id) }))[0];
+            return (await find({ _id: id }, { full: true }))[0];
         },
     } as AlbumModel);
 

@@ -4,7 +4,7 @@ import createError from 'http-errors';
 export default {
     async index(req: FastifyRequest) {
         const full = (req.query as { full: any }).full != undefined;
-        const albums = (await req.server.model.find(full)) || [];
+        const albums = (await req.server.model.findAll(full)) || [];
 
         return { albums };
     },
