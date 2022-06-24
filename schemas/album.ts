@@ -21,6 +21,12 @@ const albumShema = {
 };
 
 const index: FastifySchema = {
+    querystring: {
+        type: 'object',
+        properties: {
+            simple: {},
+        },
+    },
     response: {
         '2xx': {
             albums: { type: 'array', items: albumShema },
