@@ -4,7 +4,7 @@ import { ObjectId } from '@fastify/mongodb';
 
 interface AlbumModel {
     find(full: Boolean, filter?: Object): Promise<Object[]>;
-    findById(id: string): Promise<Object[] | undefined>;
+    findById(id: string): Promise<Object | undefined>;
 }
 
 declare module 'fastify' {
@@ -54,6 +54,10 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
                 .toArray();
         },
         async findById(id) {
+            if (!ObjectId.isValid(id)) {
+                return undefined;
+            }
+
             return (await this.find(true, { _id: new ObjectId(id) }))[0];
         },
     } as AlbumModel);

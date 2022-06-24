@@ -27,8 +27,16 @@ export default {
             full: {},
         },
     },
+    params: {
+        type: 'object',
+        properties: {
+            id: {
+                type: 'string',
+            },
+        },
+    },
     response: {
-        default: {
+        '2xx': {
             albums: {
                 type: 'array',
                 items: albumShema,
