@@ -38,7 +38,9 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
                                       localField: '_id',
                                       foreignField: 'album',
                                       as: 'pictures',
-                                      pipeline: options.populate ? [] : [{ $count: 'count' }],
+                                      pipeline: options.populate
+                                          ? [{ $project: { _id: 0, id: '$_id', url: 1, source: 1, createdAt: 1 } }]
+                                          : [{ $count: 'count' }],
                                   },
                               },
                               ...(options.populate ? [] : [{ $unwind: '$pictures' }]),
