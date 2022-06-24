@@ -16,7 +16,7 @@ export default function (fastify: FastifyInstance, options: Object, done: Functi
         handler: handler.show,
     } as RouteShorthandOptionsWithHandler);
     fastify.get('/albums/:id/pictures', {
-        schema: schema.show,
+        schema: schema.showPics,
         handler: handler.showPics,
     } as RouteShorthandOptionsWithHandler);
 

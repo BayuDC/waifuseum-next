@@ -3,9 +3,15 @@ import createError from 'http-errors';
 
 export default {
     async index(req: FastifyRequest) {
-        const { simple } = req.query as { simple: any };
+        const { simple, page, count } = req.query as {
+            simple: any;
+            page: number;
+            count: number;
+        };
         const albums = await this.model.findAll({
             simple: simple != undefined,
+            page,
+            count,
         });
 
         return { albums };
@@ -20,7 +26,8 @@ export default {
     },
     async showPics(req: FastifyRequest) {
         const { id } = req.params as { id: string };
-        const pictures = await this.model.findPics(id);
+        const { page, count } = req.query as { page: number; count: number };
+        const pictures = await this.model.findPics(id, { page, count });
 
         return { pictures };
     },

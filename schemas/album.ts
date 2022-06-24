@@ -28,13 +28,23 @@ const pictureSchema = {
     },
 };
 
-const index: FastifySchema = {
-    querystring: {
-        type: 'object',
-        properties: {
-            simple: {},
-        },
+const querySchema = {
+    type: 'object',
+    properties: {
+        simple: {},
+        page: { type: 'number', nullable: true },
+        count: { type: 'number', nullable: true },
     },
+};
+const paramsSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+    },
+};
+
+const index: FastifySchema = {
+    querystring: querySchema,
     response: {
         '2xx': {
             albums: { type: 'array', items: albumShema },
@@ -43,21 +53,21 @@ const index: FastifySchema = {
 };
 
 const show: FastifySchema = {
-    params: {
-        type: 'object',
-        properties: {
-            id: { type: 'string' },
-        },
-    },
+    params: paramsSchema,
     response: {
         '2xx': {
             album: albumShema,
+        },
+    },
+};
+const showPics: FastifySchema = {
+    params: paramsSchema,
+    querystring: querySchema,
+    response: {
+        '2xx': {
             pictures: { type: 'array', items: pictureSchema },
         },
     },
 };
 
-export default {
-    index,
-    show,
-};
+export default { index, show, showPics };

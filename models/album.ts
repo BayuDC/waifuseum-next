@@ -3,9 +3,9 @@ import { FastifyInstance } from 'fastify';
 import { ObjectId } from '@fastify/mongodb';
 
 interface AlbumModel {
-    findAll(options: { simple: boolean }): Promise<Object[]>;
+    findAll(options: { simple: boolean; page?: number; count?: number }): Promise<Object[]>;
+    findPics(id: string, options?: { page?: number; count?: number }): Promise<Object[]>;
     findById(id: string): Promise<Object>;
-    findPics(id: string): Promise<Object[]>;
 }
 
 declare module 'fastify' {
@@ -15,7 +15,10 @@ declare module 'fastify' {
 }
 
 export default fp(function (fastify: FastifyInstance, options: Object, done: Function) {
-    const find = async (filter?: Object, options?: { simple: boolean }): Promise<Object[] | undefined> => {
+    const find = async (
+        filter?: Object,
+        options?: { simple: boolean; page?: number; count?: number }
+    ): Promise<Object[] | undefined> => {
         const population: Object[] = options?.simple
             ? []
             : [
@@ -40,6 +43,10 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
                   },
                   { $unwind: '$pictures' },
               ];
+        const pagination: Object[] =
+            options?.count && options?.page
+                ? [{ $skip: options?.count * (options?.page - 1) }, { $limit: options?.count }]
+                : [];
         const projection: Object = options?.simple
             ? {}
             : {
@@ -52,15 +59,24 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
         const pipeline: Object[] = [
             { $match: { ...filter, private: false } },
             ...population,
+            ...pagination,
             { $project: { id: '$_id', _id: 0, name: 1, slug: 1, ...projection } },
         ];
 
         return await fastify.mongo.db?.collection('albums').aggregate(pipeline).toArray();
     };
-    const findPics = async (filter?: Object): Promise<Object[] | undefined> => {
+    const findPics = async (
+        filter?: Object,
+        options?: { page?: number; count?: number }
+    ): Promise<Object[] | undefined> => {
+        const pagination: Object[] =
+            options?.count && options?.page
+                ? [{ $skip: options?.count * (options?.page - 1) }, { $limit: options?.count }]
+                : [];
+
         return await fastify.mongo.db
             ?.collection('pictures')
-            .aggregate([{ $match: filter }, { $project: { id: '$_id', _id: 0, url: 1, source: 1 } }])
+            .aggregate([{ $match: filter }, ...pagination, { $project: { id: '$_id', _id: 0, url: 1, source: 1 } }])
             .toArray();
     };
 
@@ -75,10 +91,10 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
                 _id: new ObjectId(id),
             })) || [])[0];
         },
-        async findPics(id) {
+        async findPics(id, options = {}) {
             if (!ObjectId.isValid(id)) return [];
 
-            const pictures = await findPics({ album: new ObjectId(id) });
+            const pictures = await findPics({ album: new ObjectId(id) }, options);
 
             return pictures;
         },
