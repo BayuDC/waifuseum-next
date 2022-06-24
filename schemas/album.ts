@@ -9,6 +9,7 @@ const albumShema = {
         private: { type: 'boolean' },
         community: { type: 'boolean' },
         picturesCount: { type: 'number' },
+        pictures: { type: 'array' },
         createdBy: {
             type: 'object',
             properties: {
@@ -25,6 +26,7 @@ export default {
         type: 'object',
         properties: {
             full: {},
+            populate: {},
         },
     },
     params: {

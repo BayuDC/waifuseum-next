@@ -4,7 +4,7 @@ import { ObjectId } from '@fastify/mongodb';
 
 interface AlbumModel {
     findAll(full: boolean): Promise<Object[]>;
-    findById(id: string | ObjectId): Promise<Object | undefined>;
+    findById(id: string | ObjectId, full: boolean, populate: boolean): Promise<Object | undefined>;
 }
 
 declare module 'fastify' {
@@ -38,16 +38,24 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
                                       localField: '_id',
                                       foreignField: 'album',
                                       as: 'pictures',
-                                      pipeline: [{ $count: 'count' }],
+                                      pipeline: options.populate ? [] : [{ $count: 'count' }],
                                   },
                               },
-                              { $unwind: '$pictures' },
+                              ...(options.populate ? [] : [{ $unwind: '$pictures' }]),
                           ]
                         : []),
                     {
                         $project: {
                             ...{ _id: 0, id: '$_id', name: 1, slug: 1, private: 1, community: 1 },
-                            ...(options.full ? { createdAt: 1, createdBy: 1, picturesCount: '$pictures.count' } : {}),
+                            ...(options.full
+                                ? {
+                                      createdAt: 1,
+                                      createdBy: 1,
+                                      ...(options.populate
+                                          ? { pictures: 1, picturesCount: { $size: '$pictures' } }
+                                          : { picturesCount: '$pictures.count' }),
+                                  }
+                                : {}),
                         },
                     },
                 ])
@@ -59,13 +67,13 @@ export default fp(function (fastify: FastifyInstance, options: Object, done: Fun
         async findAll(full) {
             return await find({}, { full });
         },
-        async findById(id) {
+        async findById(id, full, populate) {
             if (!ObjectId.isValid(id)) {
                 return undefined;
             }
             id = new ObjectId(id);
 
-            return (await find({ _id: id }, { full: true }))[0];
+            return (await find({ _id: id }, { full, populate }))[0];
         },
     } as AlbumModel);
 

@@ -10,7 +10,9 @@ export default {
     },
     async show(req: FastifyRequest) {
         const id = (req.params as { id: string }).id;
-        const album = await req.server.model.findById(id);
+        const { full, populate } = req.query as { full: any; populate: any };
+
+        const album = await req.server.model.findById(id, full != undefined, populate != undefined);
 
         if (!album) throw createError(404, 'Album not found');
 
