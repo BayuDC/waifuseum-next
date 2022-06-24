@@ -26,7 +26,8 @@ export default {
     },
     async showPics(req: FastifyRequest) {
         const { id } = req.params as { id: string };
-        const pictures = await this.model.findPics(id);
+        const { page, count } = req.query as { page: number; count: number };
+        const pictures = await this.model.findPics(id, { page, count });
 
         return { pictures };
     },

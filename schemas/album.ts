@@ -45,6 +45,13 @@ const index: FastifySchema = {
 };
 
 const show: FastifySchema = {
+    querystring: {
+        type: 'object',
+        properties: {
+            page: { type: 'number', nullable: true },
+            count: { type: 'number', nullable: true },
+        },
+    },
     params: {
         type: 'object',
         properties: {
