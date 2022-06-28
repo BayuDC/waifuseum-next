@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 specifiers:
   '@fastify/cors': ^8.0.0
-  '@fastify/mongodb': ^6.0.1
   '@types/http-errors': ^1.8.2
   '@types/node': '16'
   dotenv: ^16.0.1
@@ -16,7 +15,6 @@ specifiers:
 
 dependencies:
   '@fastify/cors': 8.0.0
-  '@fastify/mongodb': 6.0.1
   fastify: 4.1.0
   fastify-plugin: 3.0.1
   http-errors: 2.0.0
@@ -62,13 +60,6 @@ packages:
     resolution: {integrity: sha512-X9BL9/N7827M9UTBVsa5G3xOoD3MQ6EqX+D6EyJyF8LdvWTHQJ//BDN4FAEaGZUA2sL+GEMC6+KNjHESnPwQuw==}
     dependencies:
       fast-json-stringify: 4.2.0
-    dev: false
-
-  /@fastify/mongodb/6.0.1:
-    resolution: {integrity: sha512-/VrLjJQGCr713LbM36Rrx+wnihJal9cU1V8nAHV8I04hFTw4WxRoybRIcoL3NwCvtf/EOjulRRTV+wkMgzeccQ==}
-    dependencies:
-      fastify-plugin: 3.0.1
-      mongodb: 4.7.0
     dev: false
 
   /@jridgewell/resolve-uri/3.0.7:
