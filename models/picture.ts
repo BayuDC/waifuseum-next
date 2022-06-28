@@ -1,6 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
+import { PictureDocument, PictureModel } from './types/picture';
 
-const schema: Schema = new mongoose.Schema(
+import Album from './album';
+import User from './user';
+
+const schema: Schema = new mongoose.Schema<PictureDocument>(
     {
         url: { type: String },
         source: { type: String },
@@ -8,18 +12,20 @@ const schema: Schema = new mongoose.Schema(
         height: { type: Number },
         album: {
             type: mongoose.mongo.ObjectId,
-            ref: 'Album',
+            ref: Album,
         },
         createdBy: {
             type: mongoose.mongo.ObjectId,
-            ref: 'User',
+            ref: User,
         },
         createdAt: { type: Date },
         updatedAt: { type: Date },
     },
     {
         versionKey: false,
+        toJSON: { virtuals: true },
     }
 );
+schema.plugin(require('mongoose-lean-id'));
 
-export default mongoose.model('Picture', schema);
+export default mongoose.model<PictureDocument, PictureModel>('Picture', schema);
