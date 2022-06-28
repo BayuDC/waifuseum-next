@@ -31,7 +31,7 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
 schema.plugin(require('mongoose-lean-id'));
 
 schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
-    this.select(['url', 'select']);
+    this.select(['url', 'source']);
     this.lean();
 
     next();
