@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { AlbumDocument, AlbumModel } from './album.d';
+import { AlbumDocument, AlbumModel } from './types/album';
 
 import Picture from './picture';
 import User from './user';
