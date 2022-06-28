@@ -15,5 +15,5 @@ export interface AlbumDocument extends Document {
 }
 
 export interface AlbumModel extends Model<AlbumDocument> {
-    paginate(number, number): Promise<[AlbumDocument]>;
+    paginate(number, number, Object): Promise<[AlbumDocument]>;
 }

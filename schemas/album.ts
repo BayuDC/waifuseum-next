@@ -20,20 +20,13 @@ const albumShema = {
         updatedAt: { type: 'string' },
     },
 };
-const pictureSchema = {
-    type: 'object',
-    properties: {
-        id: { type: 'string' },
-        url: { type: 'string' },
-        source: { type: 'string' },
-    },
-};
 
 const querySchema = {
     type: 'object',
     properties: {
         page: { type: 'number', nullable: true, default: 1 },
         count: { type: 'number', nullable: true, default: 10 },
+        simple: { type: 'boolean', nullable: true, default: false },
     },
 };
 const paramsSchema = {

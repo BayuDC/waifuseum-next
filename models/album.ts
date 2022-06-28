@@ -33,15 +33,22 @@ schema.virtual('picturesCount', {
 });
 
 schema.pre(/^find/, function (next) {
-    this.select({ channelId: 0 });
-    this.populate('picturesCount');
-    this.populate('createdBy', 'name');
+    const { simple } = this.getOptions();
+
+    if (simple) {
+        this.select({ name: 1, slug: 1 });
+    } else {
+        this.select({ channelId: 0 });
+        this.populate('picturesCount');
+        this.populate('createdBy', 'name');
+    }
 
     next();
 });
 
-schema.static('paginate', async function (page, count) {
+schema.static('paginate', async function (page, count, options) {
     return await this.find()
+        .setOptions(options)
         .skip(count * (page - 1))
         .limit(count)
         .lean();
