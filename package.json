@@ -18,9 +18,9 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@fastify/cors": "^8.0.0",
+    "@fastify/sensible": "^5.1.0",
     "fastify": "^4.1.0",
     "fastify-plugin": "^3.0.1",
-    "http-errors": "^2.0.0",
     "mongoose": "^6.4.0",
     "mongoose-lean-id": "^0.3.0"
   },

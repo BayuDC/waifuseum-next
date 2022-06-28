@@ -6,7 +6,8 @@ const host = process.env.HOST || '127.0.0.1';
 
 const fastify = Fastify();
 
-fastify.register(require('@fastify/cors'));
+fastify.register(import('@fastify/cors'));
+fastify.register(import('@fastify/sensible'));
 
 fastify.register(require('./routes/main'));
 fastify.register(require('./routes/album'));
