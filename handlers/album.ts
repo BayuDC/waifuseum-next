@@ -1,11 +1,17 @@
 import { FastifyRequest, RouteHandlerMethod } from 'fastify';
-import { ObjectId } from 'mongoose';
 import createError from 'http-errors';
 import Album from '../models/album';
 
+interface AlbumQuery {
+    page: number;
+    count: number;
+}
+
 export default {
     async index(req: FastifyRequest) {
-        const albums = await Album.find().lean();
+        const { page, count } = req.query as AlbumQuery;
+
+        const albums = await Album.paginate(page, count);
 
         return { albums };
     },

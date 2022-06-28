@@ -32,8 +32,8 @@ const pictureSchema = {
 const querySchema = {
     type: 'object',
     properties: {
-        page: { type: 'number', nullable: true },
-        count: { type: 'number', nullable: true },
+        page: { type: 'number', nullable: true, default: 1 },
+        count: { type: 'number', nullable: true, default: 10 },
     },
 };
 const paramsSchema = {

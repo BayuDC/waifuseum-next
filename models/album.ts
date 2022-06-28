@@ -1,8 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
+import { AlbumDocument, AlbumModel } from './album.d';
+
 import Picture from './picture';
 import User from './user';
 
-const schema: Schema = new mongoose.Schema(
+const schema: Schema = new mongoose.Schema<AlbumDocument>(
     {
         name: { type: String },
         slug: { type: String },
@@ -38,4 +40,11 @@ schema.pre(/^find/, function (next) {
     next();
 });
 
-export default mongoose.model('Album', schema);
+schema.static('paginate', async function (page, count) {
+    return await this.find()
+        .skip(count * (page - 1))
+        .limit(count)
+        .lean();
+});
+
+export default mongoose.model<AlbumDocument, AlbumModel>('Album', schema);
