@@ -2,6 +2,7 @@ import { RouteHandlerMethod } from 'fastify';
 import { isValidObjectId } from 'mongoose';
 
 import Album from '../models/album';
+import Picture from '../models/picture';
 
 interface AlbumQuery {
     page: number;
@@ -37,7 +38,11 @@ export default {
     async showPics(req, res) {
         const { album } = req.state;
 
-        return { album };
+        const pictures = await Picture.find({
+            album: album?._id,
+        });
+
+        return { pictures };
     },
 } as {
     index: RouteHandlerMethod;
