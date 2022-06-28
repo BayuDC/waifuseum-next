@@ -17,23 +17,16 @@ const albumShema = {
             },
         },
         createdAt: { type: 'string' },
-    },
-};
-const pictureSchema = {
-    type: 'object',
-    properties: {
-        id: { type: 'string' },
-        url: { type: 'string' },
-        source: { type: 'string' },
+        updatedAt: { type: 'string' },
     },
 };
 
 const querySchema = {
     type: 'object',
     properties: {
-        simple: {},
-        page: { type: 'number', nullable: true },
-        count: { type: 'number', nullable: true },
+        page: { type: 'number', nullable: true, default: 1 },
+        count: { type: 'number', nullable: true, default: 10 },
+        simple: { type: 'boolean', nullable: true, default: false },
     },
 };
 const paramsSchema = {
@@ -47,7 +40,10 @@ const index: FastifySchema = {
     querystring: querySchema,
     response: {
         '2xx': {
-            albums: { type: 'array', items: albumShema },
+            albums: {
+                type: 'array',
+                items: albumShema,
+            },
         },
     },
 };
@@ -60,14 +56,5 @@ const show: FastifySchema = {
         },
     },
 };
-const showPics: FastifySchema = {
-    params: paramsSchema,
-    querystring: querySchema,
-    response: {
-        '2xx': {
-            pictures: { type: 'array', items: pictureSchema },
-        },
-    },
-};
 
-export default { index, show, showPics };
+export default { index, show };
