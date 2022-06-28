@@ -1,8 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Query } from 'mongoose';
 import { PictureDocument, PictureModel } from './types/picture';
-
-import Album from './album';
-import User from './user';
 
 const schema: Schema = new mongoose.Schema<PictureDocument>(
     {
@@ -12,11 +9,11 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
         height: { type: Number },
         album: {
             type: mongoose.mongo.ObjectId,
-            ref: Album,
+            ref: 'Album',
         },
         createdBy: {
             type: mongoose.mongo.ObjectId,
-            ref: User,
+            ref: 'User',
         },
         createdAt: { type: Date },
         updatedAt: { type: Date },
@@ -24,8 +21,22 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
     {
         versionKey: false,
         toJSON: { virtuals: true },
+        query: {
+            paginate(page: number, count: number) {
+                return this.skip(count * (page - 1)).limit(count);
+            },
+        },
     }
 );
 schema.plugin(require('mongoose-lean-id'));
+
+schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
+    this.select({
+        url: { $concat: ['https://media.discordapp.net/attachments', '$url'] },
+        source: 1,
+    }).lean();
+
+    next();
+});
 
 export default mongoose.model<PictureDocument, PictureModel>('Picture', schema);

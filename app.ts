@@ -10,6 +10,7 @@ fastify.register(import('@fastify/cors'));
 fastify.register(import('@fastify/sensible'));
 
 fastify.register(import('./plugins/error'));
+fastify.register(import('./plugins/state'));
 
 fastify.register(require('./routes/main'));
 fastify.register(require('./routes/album'));

@@ -1,4 +1,4 @@
-import { Document, Model } from 'mongoose';
+import { Document, Model, Query } from 'mongoose';
 
 import { AlbumDocument } from './album';
 import { UserDocument } from './album';
@@ -15,4 +15,10 @@ export interface PictureDocument extends Document {
     updatedAt: Date;
 }
 
-export interface PictureModel extends Model<AlbumDocument> {}
+export interface PictureQueryHelper {
+    paginate(this: PictureModelQuery, page: number, count: number): PictureModelQuery;
+}
+
+export interface PictureModelQuery extends Query<any, PictureDocument, PictureQueryHelper> {}
+
+export interface PictureModel extends Model<PictureDocument, PictureQueryHelper> {}

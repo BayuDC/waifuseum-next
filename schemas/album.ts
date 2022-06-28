@@ -21,6 +21,15 @@ const albumShema = {
     },
 };
 
+const pictureSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+        url: { type: 'string' },
+        source: { type: 'string' },
+    },
+};
+
 const querySchema = {
     type: 'object',
     properties: {
@@ -57,4 +66,17 @@ const show: FastifySchema = {
     },
 };
 
-export default { index, show };
+const showPics: FastifySchema = {
+    params: paramsSchema,
+    querystring: querySchema,
+    response: {
+        '2xx': {
+            pictures: {
+                type: 'array',
+                items: pictureSchema,
+            },
+        },
+    },
+};
+
+export default { index, show, showPics };
