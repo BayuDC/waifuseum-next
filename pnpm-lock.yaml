@@ -10,6 +10,7 @@ specifiers:
   fastify-plugin: ^3.0.1
   http-errors: ^2.0.0
   mongoose: ^6.4.0
+  mongoose-lean-id: ^0.3.0
   ts-node: ^10.8.1
   typescript: ^4.7.4
 
@@ -20,6 +21,7 @@ dependencies:
   fastify-plugin: 3.0.1
   http-errors: 2.0.0
   mongoose: 6.4.0
+  mongoose-lean-id: 0.3.0_mongoose@6.4.0
 
 devDependencies:
   '@types/http-errors': 1.8.2
@@ -406,6 +408,14 @@ packages:
       socks: 2.6.2
     optionalDependencies:
       saslprep: 1.0.3
+    dev: false
+
+  /mongoose-lean-id/0.3.0_mongoose@6.4.0:
+    resolution: {integrity: sha512-/eONPzg+tA7/VR4uv0uKxKwH4OCseZShqwbMW572QvlSU0g48zDFTiDuCjZmNykfZgK3ZOwjfLVbXBAAAbXI4Q==}
+    peerDependencies:
+      mongoose: 4.x || 5.x || 6.x
+    dependencies:
+      mongoose: 6.4.0
     dev: false
 
   /mongoose/6.4.0:

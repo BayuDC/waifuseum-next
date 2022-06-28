@@ -1,12 +1,39 @@
 import mongoose, { Schema } from 'mongoose';
+import Picture from './picture';
 
-const schema: Schema = new mongoose.Schema({
-    name: String,
-    slug: String,
-    private: Boolean,
-    community: Boolean,
-    createdAt: Date,
-    updatedAt: Date,
+const schema: Schema = new mongoose.Schema(
+    {
+        name: { type: String },
+        slug: { type: String },
+        private: { type: Boolean },
+        community: { type: Boolean },
+        createdBy: {
+            type: mongoose.mongo.ObjectId,
+            ref: 'User',
+        },
+        createdAt: { type: Date },
+        updatedAt: { type: Date },
+    },
+    {
+        versionKey: false,
+        toJSON: { virtuals: true },
+    }
+);
+
+schema.plugin(require('mongoose-lean-id'));
+
+schema.virtual('picturesCount', {
+    ref: Picture,
+    localField: '_id',
+    foreignField: 'album',
+    count: true,
+});
+
+schema.pre(/^find/, function (next) {
+    this.select({ channelId: 0 });
+    this.populate('picturesCount');
+
+    next();
 });
 
 export default mongoose.model('Album', schema);

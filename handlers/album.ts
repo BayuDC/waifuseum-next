@@ -1,34 +1,23 @@
 import { FastifyRequest, RouteHandlerMethod } from 'fastify';
+import { ObjectId } from 'mongoose';
 import createError from 'http-errors';
+import Album from '../models/album';
 
 export default {
     async index(req: FastifyRequest) {
-        // const { simple, page, count } = req.query as {
-        //     simple: any;
-        //     page: number;
-        //     count: number;
-        // };
-        // const albums = await this.model.findAll({
-        //     simple: simple != undefined,
-        //     page,
-        //     count,
-        // });
-        // return { albums };
+        const albums = await Album.find().lean();
+
+        return { albums };
     },
     async show(req: FastifyRequest) {
-        // const { id } = req.params as { id: string };
-        // const album = await this.model.findById(id);
-        // if (!album) throw createError(404, 'Album not found');
-        // return { album };
-    },
-    async showPics(req: FastifyRequest) {
-        // const { id } = req.params as { id: string };
-        // const { page, count } = req.query as { page: number; count: number };
-        // const pictures = await this.model.findPics(id, { page, count });
-        // return { pictures };
+        const { id } = req.params as { id: string };
+
+        const album = await Album.findById(id).lean();
+        if (!album) throw createError(404, 'Album not found');
+
+        return { album };
     },
 } as {
     index: RouteHandlerMethod;
     show: RouteHandlerMethod;
-    showPics: RouteHandlerMethod;
 };

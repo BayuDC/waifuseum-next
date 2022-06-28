@@ -22,7 +22,8 @@
     "fastify": "^4.1.0",
     "fastify-plugin": "^3.0.1",
     "http-errors": "^2.0.0",
-    "mongoose": "^6.4.0"
+    "mongoose": "^6.4.0",
+    "mongoose-lean-id": "^0.3.0"
   },
   "devDependencies": {
     "@types/http-errors": "^1.8.2",
