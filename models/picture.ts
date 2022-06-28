@@ -1,9 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { PictureDocument, PictureModel } from './types/picture';
 
-import Album from './album';
-import User from './user';
-
 const schema: Schema = new mongoose.Schema<PictureDocument>(
     {
         url: { type: String },
@@ -12,11 +9,11 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
         height: { type: Number },
         album: {
             type: mongoose.mongo.ObjectId,
-            ref: Album,
+            ref: 'Album',
         },
         createdBy: {
             type: mongoose.mongo.ObjectId,
-            ref: User,
+            ref: 'User',
         },
         createdAt: { type: Date },
         updatedAt: { type: Date },

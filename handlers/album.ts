@@ -20,16 +20,28 @@ export default {
 
         return { albums };
     },
-    async show(req, reply) {
+    async load(req, reply) {
         const { id } = req.params as AlbumParams;
         if (!isValidObjectId(id)) throw reply.badRequest();
 
         const album = await Album.findById(id).lean();
         if (!album) throw reply.notFound();
 
+        req.state.album = album;
+    },
+    async show(req, reply) {
+        const { album } = req.state;
+
+        return { album };
+    },
+    async showPics(req, res) {
+        const { album } = req.state;
+
         return { album };
     },
 } as {
     index: RouteHandlerMethod;
+    load: RouteHandlerMethod;
     show: RouteHandlerMethod;
+    showPics: RouteHandlerMethod;
 };

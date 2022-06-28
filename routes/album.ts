@@ -8,9 +8,16 @@ export default (function (fastify, options, done) {
         schema: schema.index,
         handler: handler.index,
     } as RouteShorthandOptionsWithHandler);
+
     fastify.get('/albums/:id', {
         schema: schema.show,
+        preHandler: handler.load,
         handler: handler.show,
+    } as RouteShorthandOptionsWithHandler);
+
+    fastify.get('/albums/:id/pictures', {
+        preHandler: handler.load,
+        handler: handler.showPics,
     } as RouteShorthandOptionsWithHandler);
 
     done();
