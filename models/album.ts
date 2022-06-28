@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import Picture from './picture';
+import User from './user';
 
 const schema: Schema = new mongoose.Schema(
     {
@@ -9,7 +10,7 @@ const schema: Schema = new mongoose.Schema(
         community: { type: Boolean },
         createdBy: {
             type: mongoose.mongo.ObjectId,
-            ref: 'User',
+            ref: User,
         },
         createdAt: { type: Date },
         updatedAt: { type: Date },
@@ -32,6 +33,7 @@ schema.virtual('picturesCount', {
 schema.pre(/^find/, function (next) {
     this.select({ channelId: 0 });
     this.populate('picturesCount');
+    this.populate('createdBy', 'name');
 
     next();
 });

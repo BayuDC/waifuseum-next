@@ -8,10 +8,16 @@ const albumShema = {
         slug: { type: 'string' },
         private: { type: 'boolean' },
         community: { type: 'boolean' },
-        pictures: { type: 'array' },
         picturesCount: { type: 'number' },
-        createdBy: { type: 'string' },
+        createdBy: {
+            type: 'object',
+            properties: {
+                id: { type: 'string' },
+                name: { type: 'string' },
+            },
+        },
         createdAt: { type: 'string' },
+        updatedAt: { type: 'string' },
     },
 };
 const pictureSchema = {
@@ -43,7 +49,7 @@ const index: FastifySchema = {
         '2xx': {
             albums: {
                 type: 'array',
-                // items: albumShema,
+                items: albumShema,
             },
         },
     },
@@ -51,20 +57,11 @@ const index: FastifySchema = {
 
 const show: FastifySchema = {
     params: paramsSchema,
-    // response: {
-    //     '2xx': {
-    //         album: albumShema,
-    //     },
-    // },
-};
-const showPics: FastifySchema = {
-    params: paramsSchema,
-    querystring: querySchema,
     response: {
         '2xx': {
-            pictures: { type: 'array', items: pictureSchema },
+            album: albumShema,
         },
     },
 };
 
-export default { index, show, showPics };
+export default { index, show };
