@@ -35,12 +35,13 @@ export default {
 
         return { album };
     },
-    async showPics(req, res) {
+    async showPics(req, reply) {
         const { album } = req.state;
+        const { page, count } = req.query as AlbumQuery;
 
         const pictures = await Picture.find({
             album: album?._id,
-        });
+        }).paginate(page, count);
 
         return { pictures };
     },

@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Query } from 'mongoose';
 import { PictureDocument, PictureModel } from './types/picture';
 
 const schema: Schema = new mongoose.Schema<PictureDocument>(
@@ -21,8 +21,20 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
     {
         versionKey: false,
         toJSON: { virtuals: true },
+        query: {
+            paginate(page: number, count: number) {
+                return this.skip(count * (page - 1)).limit(count);
+            },
+        },
     }
 );
 schema.plugin(require('mongoose-lean-id'));
+
+schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
+    this.select(['url', 'select']);
+    this.lean();
+
+    next();
+});
 
 export default mongoose.model<PictureDocument, PictureModel>('Picture', schema);
