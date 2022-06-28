@@ -1,9 +1,9 @@
-import { FastifyInstance, RouteShorthandOptionsWithHandler } from 'fastify';
+import { FastifyPluginCallback, RouteShorthandOptionsWithHandler } from 'fastify';
 
 import handler from '../handlers/album';
 import schema from '../schemas/album';
 
-export default function (fastify: FastifyInstance, options: Object, done: Function) {
+export default (function (fastify, options, done) {
     fastify.get('/albums', {
         schema: schema.index,
         handler: handler.index,
@@ -14,4 +14,4 @@ export default function (fastify: FastifyInstance, options: Object, done: Functi
     } as RouteShorthandOptionsWithHandler);
 
     done();
-}
+} as FastifyPluginCallback);
