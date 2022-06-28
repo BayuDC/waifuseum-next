@@ -31,8 +31,10 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
 schema.plugin(require('mongoose-lean-id'));
 
 schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
-    this.select(['url', 'source']);
-    this.lean();
+    this.select({
+        url: { $concat: ['https://media.discordapp.net/attachments', '$url'] },
+        source: 1,
+    }).lean();
 
     next();
 });

@@ -21,5 +21,5 @@ export interface AlbumModel extends Model<AlbumDocument> {
         options: {
             simple: boolean;
         }
-    ): Promise<[AlbumDocument]>;
+    ): Promise<AlbumDocument[]>;
 }
