@@ -31,6 +31,19 @@ schema.virtual('picturesCount', {
     foreignField: 'album',
     count: true,
 });
+schema.virtual('pictures', {
+    ref: Picture,
+    localField: '_id',
+    foreignField: 'album',
+    options: {
+        select: {
+            _id: 1,
+        },
+        sort: {
+            createdAt: 'desc',
+        },
+    },
+});
 
 schema.pre(/^find/, function (next) {
     const { simple } = this.getOptions();
@@ -40,6 +53,10 @@ schema.pre(/^find/, function (next) {
     } else {
         this.select({ channelId: 0 });
         this.populate('picturesCount');
+        this.populate({
+            path: 'pictures',
+            perDocumentLimit: 3,
+        });
         this.populate('createdBy', 'name');
     }
 
