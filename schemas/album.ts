@@ -1,5 +1,16 @@
 import { FastifySchema } from 'fastify';
 
+const pictureSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+        url: { type: 'string' },
+        source: { type: 'string' },
+        createdAt: { type: 'string' },
+        updatedAt: { type: 'string' },
+    },
+};
+
 const albumShema = {
     type: 'object',
     properties: {
@@ -9,6 +20,10 @@ const albumShema = {
         private: { type: 'boolean' },
         community: { type: 'boolean' },
         picturesCount: { type: 'number' },
+        pictures: {
+            type: 'array',
+            items: pictureSchema,
+        },
         createdBy: {
             type: 'object',
             properties: {
@@ -18,15 +33,6 @@ const albumShema = {
         },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
-    },
-};
-
-const pictureSchema = {
-    type: 'object',
-    properties: {
-        id: { type: 'string' },
-        url: { type: 'string' },
-        source: { type: 'string' },
     },
 };
 
