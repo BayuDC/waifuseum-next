@@ -65,6 +65,7 @@ schema.pre(/^find/, function (next) {
 
 schema.static('paginate', async function (page, count, options) {
     return await this.find()
+        .sort({ updatedAt: 'desc' })
         .setOptions(options)
         .skip(count * (page - 1))
         .limit(count)
