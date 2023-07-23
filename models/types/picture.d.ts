@@ -6,6 +6,12 @@ import { UserDocument } from './album';
 export interface PictureDocument extends Document {
     id: string;
     url: string;
+    urls: {
+        base: string;
+        thumbnail: string;
+        minimal?: string;
+        standard?: string;
+    };
     source: string;
     width: number;
     height: number;
