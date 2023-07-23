@@ -1,14 +1,25 @@
 import mongoose, { Schema, Query } from 'mongoose';
-import { PictureDocument, PictureModel } from './types/picture';
+import { PictureDocument, PictureModel, PictureUrlDocument } from './types/picture';
 
 const schema: Schema = new mongoose.Schema<PictureDocument>(
     {
         url: { type: String },
         urls: {
-            base: { type: String, required: true },
-            thumbnail: { type: String },
-            minimal: { type: String },
-            standard: { type: String },
+            type: {
+                base: { type: String },
+                thumbnail: { type: String },
+                minimal: { type: String },
+                standard: { type: String },
+            },
+            get(v: PictureUrlDocument) {
+                return {
+                    base: v.base,
+                    original: v.base,
+                    thumbnail: v.base + v.thumbnail,
+                    minimal: v.base + v.minimal,
+                    standard: v.base + v.standard,
+                };
+            },
         },
         source: { type: String },
         width: { type: Number },
@@ -37,7 +48,7 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
     }
 );
 schema.plugin(require('mongoose-lean-id'));
-// schema.plugin(require('mongoose-lean-getters'));
+schema.plugin(require('mongoose-lean-getters'));
 
 schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
     this.select({
