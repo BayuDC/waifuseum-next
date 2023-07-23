@@ -86,6 +86,7 @@ const showPics: FastifySchema = {
     querystring: querySchema,
     response: {
         '2xx': {
+            album: albumShema,
             pictures: {
                 type: 'array',
                 items: pictureSchema,

@@ -37,6 +37,7 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
     }
 );
 schema.plugin(require('mongoose-lean-id'));
+// schema.plugin(require('mongoose-lean-getters'));
 
 schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
     this.select({
@@ -45,7 +46,7 @@ schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
         source: 1,
         createdAt: 1,
         updatedAt: 1,
-    }).lean();
+    }).lean({ getters: true });
 
     next();
 });

@@ -43,7 +43,7 @@ export default {
             album: album?._id,
         }).paginate(page, count);
 
-        return { pictures };
+        return { album, pictures };
     },
 } as {
     index: RouteHandlerMethod;
