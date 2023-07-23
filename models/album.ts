@@ -52,11 +52,14 @@ schema.pre(/^find/, function (next) {
         this.select({ name: 1, slug: 1 });
     } else {
         this.select({ channelId: 0 });
+        // @ts-ignore
         this.populate('picturesCount');
+        // @ts-ignore
         this.populate({
             path: 'pictures',
             perDocumentLimit: 3,
         });
+        // @ts-ignore
         this.populate('createdBy', 'name');
     }
 
