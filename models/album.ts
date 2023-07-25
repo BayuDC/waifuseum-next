@@ -7,6 +7,8 @@ import User from './user';
 const schema: Schema = new mongoose.Schema<AlbumDocument>(
     {
         name: { type: String },
+        alias: { type: String },
+        description: { type: String },
         slug: { type: String },
         private: { type: Boolean },
         community: { type: Boolean },

@@ -5,6 +5,8 @@ import { UserDocument } from './album';
 export interface AlbumDocument extends Document {
     id: string;
     name: string;
+    alias: string;
+    description: string;
     slug: string;
     private: boolean;
     community: boolean;

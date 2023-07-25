@@ -25,6 +25,8 @@ const albumShema = {
     properties: {
         id: { type: 'string' },
         name: { type: 'string' },
+        alias: { type: 'string' },
+        description: { type: 'string' },
         slug: { type: 'string' },
         private: { type: 'boolean' },
         community: { type: 'boolean' },
