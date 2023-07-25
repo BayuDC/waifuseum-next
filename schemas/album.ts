@@ -20,6 +20,16 @@ const pictureSchema = {
     },
 };
 
+const tagSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+        name: { type: 'string' },
+        alias: { type: 'string' },
+        slug: { type: 'string' },
+    },
+};
+
 const albumShema = {
     type: 'object',
     properties: {
@@ -30,6 +40,7 @@ const albumShema = {
         slug: { type: 'string' },
         private: { type: 'boolean' },
         community: { type: 'boolean' },
+        tags: { type: 'array', items: tagSchema },
         picturesCount: { type: 'number' },
         pictures: {
             type: 'array',

@@ -1,6 +1,7 @@
 import { Document, Model } from 'mongoose';
 
-import { UserDocument } from './album';
+import { UserDocument } from './user';
+import { TagDocument } from './tag';
 
 export interface AlbumDocument extends Document {
     id: string;
@@ -11,6 +12,7 @@ export interface AlbumDocument extends Document {
     private: boolean;
     community: boolean;
     picturesCount: number;
+    tags: TagDocument[];
     createdBy: UserDocument;
     createdAt: Date;
     updatedAt: Date;
