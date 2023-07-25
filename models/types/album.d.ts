@@ -1,14 +1,18 @@
 import { Document, Model } from 'mongoose';
 
-import { UserDocument } from './album';
+import { UserDocument } from './user';
+import { TagDocument } from './tag';
 
 export interface AlbumDocument extends Document {
     id: string;
     name: string;
+    alias: string;
+    description: string;
     slug: string;
     private: boolean;
     community: boolean;
     picturesCount: number;
+    tags: TagDocument[];
     createdBy: UserDocument;
     createdAt: Date;
     updatedAt: Date;

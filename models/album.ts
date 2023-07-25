@@ -3,13 +3,17 @@ import { AlbumDocument, AlbumModel } from './types/album';
 
 import Picture from './picture';
 import User from './user';
+import Tag from './tag';
 
 const schema: Schema = new mongoose.Schema<AlbumDocument>(
     {
         name: { type: String },
+        alias: { type: String },
+        description: { type: String },
         slug: { type: String },
         private: { type: Boolean },
         community: { type: Boolean },
+        tags: [{ type: mongoose.mongo.ObjectId, ref: Tag }],
         createdBy: {
             type: mongoose.mongo.ObjectId,
             ref: User,
@@ -61,6 +65,8 @@ schema.pre(/^find/, function (next) {
         });
         // @ts-ignore
         this.populate('createdBy', 'name');
+        // @ts-ignore
+        this.populate('tags', ['name', 'slug', 'alias']);
     }
 
     next();
