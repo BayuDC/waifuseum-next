@@ -14,6 +14,7 @@ fastify.register(import('./plugins/state'));
 
 fastify.register(require('./routes/main'));
 fastify.register(require('./routes/album'));
+fastify.register(require('./routes/picture'));
 
 fastify.listen({ port: port as number, host }, (err, addr) => {
     if (err) {
