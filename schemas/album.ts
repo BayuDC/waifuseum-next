@@ -64,6 +64,7 @@ const querySchema = {
         page: { type: 'number', nullable: true, default: 1 },
         count: { type: 'number', nullable: true, default: 10 },
         simple: { type: 'boolean', nullable: true, default: false },
+        search: { type: 'string', nullable: true },
     },
 };
 const paramsSchema = {
