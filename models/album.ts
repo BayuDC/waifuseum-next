@@ -50,7 +50,11 @@ schema.virtual('pictures', {
 });
 
 schema.pre(/^find/, function (next) {
-    const { simple } = this.getOptions();
+    const { simple, search } = this.getOptions();
+
+    if (search) {
+        this.where({ slug: { $regex: '.*' + search + '.*' } });
+    }
 
     if (simple) {
         this.select({ name: 1, slug: 1 });

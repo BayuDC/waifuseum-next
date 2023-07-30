@@ -8,6 +8,7 @@ interface AlbumQuery {
     page: number;
     count: number;
     simple: boolean;
+    search: string;
 }
 interface AlbumParams {
     id: string;
@@ -15,9 +16,9 @@ interface AlbumParams {
 
 export default {
     async index(req, reply) {
-        const { page, count, simple } = req.query as AlbumQuery;
+        const { page, count, simple, search } = req.query as AlbumQuery;
 
-        const albums = await Album.paginate(page, count, { simple });
+        const albums = await Album.paginate(page, count, { simple, search });
 
         return { albums };
     },

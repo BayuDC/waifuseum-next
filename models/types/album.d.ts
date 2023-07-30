@@ -24,6 +24,7 @@ export interface AlbumModel extends Model<AlbumDocument> {
         count: number,
         options: {
             simple: boolean;
+            search: string;
         }
     ): Promise<AlbumDocument[]>;
 }
