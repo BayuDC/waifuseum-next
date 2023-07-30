@@ -57,7 +57,9 @@ schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
         source: 1,
         createdAt: 1,
         updatedAt: 1,
-    }).lean({ getters: true });
+    })
+        .sort({ createdAt: 'desc' })
+        .lean({ getters: true });
 
     next();
 });
