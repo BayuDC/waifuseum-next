@@ -1,25 +1,21 @@
-import { RouteHandlerMethod } from 'fastify';
+import { MyHandlerMethod } from '../app.d';
+import { GetPictureSchema } from '../schemas/picture';
 
 import Picture from '../models/picture';
 
-interface PictureQuery {
-    page: number;
-    count: number;
-}
+const dayInMs = 24 * 60 * 60 * 1000;
 
-export default {
-    async index(req, reply) {
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+export const GetTodayPictureHandler: MyHandlerMethod<typeof GetPictureSchema> = async (req, reply) => {
+    const { page, count } = req.query;
 
-        const { page, count } = req.query as PictureQuery;
+    const pictures = await Picture.find({
+        createdAt: { $gt: new Date(Date.now() - dayInMs) },
+    })
+        .paginate(page, count)
+        .populate({
+            path: 'album',
+            options: { simple: true },
+        });
 
-        const pictures = await Picture.find({
-            createdAt: { $gte: today },
-        }).paginate(page, count);
-
-        return { pictures };
-    },
-} as {
-    index: RouteHandlerMethod;
+    return { pictures };
 };

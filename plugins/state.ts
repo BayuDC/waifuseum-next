@@ -9,6 +9,7 @@ declare module 'fastify' {
             album?: AlbumDocument;
         };
     }
+    interface ApaCoba {}
 }
 
 export default fp(function (fastify, options, done) {

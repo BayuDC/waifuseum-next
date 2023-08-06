@@ -37,9 +37,6 @@ const schema: Schema = new mongoose.Schema<PictureDocument>(
     },
     {
         versionKey: false,
-        toJSON: {
-            virtuals: true,
-        },
         query: {
             paginate(page: number, count: number) {
                 return this.skip(count * (page - 1)).limit(count);

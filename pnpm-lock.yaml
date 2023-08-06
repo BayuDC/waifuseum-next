@@ -11,6 +11,12 @@ dependencies:
   '@fastify/sensible':
     specifier: ^5.1.0
     version: 5.1.0
+  '@fastify/type-provider-typebox':
+    specifier: ^3.3.0
+    version: 3.3.0(@sinclair/typebox@0.30.0)
+  '@sinclair/typebox':
+    specifier: ^0.30.0
+    version: 0.30.0
   fastify:
     specifier: ^4.1.0
     version: 4.1.0
@@ -90,6 +96,14 @@ packages:
       vary: 1.1.2
     dev: false
 
+  /@fastify/type-provider-typebox@3.3.0(@sinclair/typebox@0.30.0):
+    resolution: {integrity: sha512-CJ4bhrx2FurljP7zIR1pIGlSzf3ChSm65p5MyKUR74CT4Ft5gcqrZg6FNq4mOCtMegmgUL7Z0Ly762aIHp5ZWw==}
+    peerDependencies:
+      '@sinclair/typebox': '>=0.26 <=0.29'
+    dependencies:
+      '@sinclair/typebox': 0.30.0
+    dev: false
+
   /@jridgewell/resolve-uri@3.0.7:
     resolution: {integrity: sha512-8cXDaBBHOr2pQ7j77Y6Vp5VDT2sIqWyWQ56TjEq4ih/a4iST3dItRe8Q9fp0rrIl9DoKhWQtUQz/YpOxLkXbNA==}
     engines: {node: '>=6.0.0'}
@@ -105,6 +119,10 @@ packages:
       '@jridgewell/resolve-uri': 3.0.7
       '@jridgewell/sourcemap-codec': 1.4.13
     dev: true
+
+  /@sinclair/typebox@0.30.0:
+    resolution: {integrity: sha512-7v+I+UuRm7S8rV6u1rz3MkXO5skN1QiqlTeIY6ShiuvhcEnzRIrj/bqzHQNb9M2O9d8Q1mepW7lJ9cNUA1HEVg==}
+    dev: false
 
   /@tsconfig/node10@1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}

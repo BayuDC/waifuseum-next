@@ -57,7 +57,7 @@ schema.pre(/^find/, function (next) {
     }
 
     if (simple) {
-        this.select({ name: 1, slug: 1 });
+        this.select({ name: 1, alias: 1, slug: 1 });
     } else {
         this.select({ channelId: 0 });
         // @ts-ignore

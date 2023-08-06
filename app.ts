@@ -1,10 +1,12 @@
 import Fastify from 'fastify';
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+
 import './db';
 
 const port = process.env.PORT || 8080;
 const host = process.env.HOST || '127.0.0.1';
 
-const fastify = Fastify();
+const fastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
 
 fastify.register(import('@fastify/cors'));
 fastify.register(import('@fastify/sensible'));
