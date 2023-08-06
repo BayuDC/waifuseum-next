@@ -2,6 +2,7 @@ import { Document, Model } from 'mongoose';
 
 import { UserDocument } from './user';
 import { TagDocument } from './tag';
+import { PictureDocument } from './picture';
 
 export interface AlbumDocument extends Document {
     id: string;
@@ -12,6 +13,7 @@ export interface AlbumDocument extends Document {
     private: boolean;
     community: boolean;
     picturesCount: number;
+    pictures: PictureDocument[];
     tags: TagDocument[];
     createdBy: UserDocument;
     createdAt: Date;
@@ -24,7 +26,7 @@ export interface AlbumModel extends Model<AlbumDocument> {
         count: number,
         options: {
             simple: boolean;
-            search: string;
+            search?: string;
         }
     ): Promise<AlbumDocument[]>;
 }

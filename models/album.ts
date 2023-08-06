@@ -39,14 +39,6 @@ schema.virtual('pictures', {
     ref: Picture,
     localField: '_id',
     foreignField: 'album',
-    options: {
-        select: {
-            _id: 1,
-        },
-        sort: {
-            createdAt: 'desc',
-        },
-    },
 });
 
 schema.pre(/^find/, function (next) {
@@ -59,18 +51,20 @@ schema.pre(/^find/, function (next) {
     if (simple) {
         this.select({ name: 1, alias: 1, slug: 1 });
     } else {
-        this.select({ channelId: 0 });
         // @ts-ignore
         this.populate('picturesCount');
         // @ts-ignore
         this.populate({
             path: 'pictures',
-            perDocumentLimit: 3,
+            perDocumentLimit: 5,
+            select: ['url', 'urls'],
+            sort: { createdAt: 'desc' },
         });
         // @ts-ignore
-        this.populate('createdBy', 'name');
-        // @ts-ignore
-        this.populate('tags', ['name', 'slug', 'alias']);
+        this.populate({
+            path: 'tags',
+            select: ['name', 'slug', 'alias'],
+        });
     }
 
     next();

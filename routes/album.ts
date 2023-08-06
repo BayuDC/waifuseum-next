@@ -1,25 +1,22 @@
-import { FastifyPluginCallback, RouteShorthandOptionsWithHandler } from 'fastify';
+import { FastifyPluginCallback } from 'fastify';
 
-import handler from '../handlers/album';
-import schema from '../schemas/album';
+import { GetAlbumHandler, GetAlbumListHandler, GetAlbumListSimpleHandler } from '../handlers/album';
+import { GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
 
 export default (function (fastify, options, done) {
     fastify.get('/albums', {
-        schema: schema.index,
-        handler: handler.index,
-    } as RouteShorthandOptionsWithHandler);
+        schema: GetAlbumListSchema,
+        handler: GetAlbumListHandler,
+    });
+    fastify.get('/albums/simple', {
+        schema: GetAlbumListSimpleSchema,
+        handler: GetAlbumListSimpleHandler,
+    });
 
     fastify.get('/albums/:id', {
-        schema: schema.show,
-        preHandler: handler.load,
-        handler: handler.show,
-    } as RouteShorthandOptionsWithHandler);
-
-    fastify.get('/albums/:id/pictures', {
-        schema: schema.showPics,
-        preHandler: handler.load,
-        handler: handler.showPics,
-    } as RouteShorthandOptionsWithHandler);
+        schema: GetAlbumSchema,
+        handler: GetAlbumHandler,
+    });
 
     done();
 } as FastifyPluginCallback);

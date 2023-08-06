@@ -1,11 +1,6 @@
 import { Type } from '@sinclair/typebox';
 
-export const AlbumSimpleSchema = Type.Object({
-    id: Type.String(),
-    name: Type.String(),
-    alias: Type.String(),
-    slug: Type.String(),
-});
+import { AlbumSimpleSchema } from './album';
 
 export const PictureSchema = Type.Object({
     id: Type.String(),

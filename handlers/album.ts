@@ -1,54 +1,30 @@
-import { RouteHandlerMethod } from 'fastify';
 import { isValidObjectId } from 'mongoose';
+import { MyHandlerMethod } from '../app.d';
+import { GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
 
 import Album from '../models/album';
-import Picture from '../models/picture';
 
-interface AlbumQuery {
-    page: number;
-    count: number;
-    simple: boolean;
-    search: string;
-}
-interface AlbumParams {
-    id: string;
-}
+export const GetAlbumListHandler: MyHandlerMethod<typeof GetAlbumListSchema> = async (req, reply) => {
+    const { page, count, search } = req.query;
 
-export default {
-    async index(req, reply) {
-        const { page, count, simple, search } = req.query as AlbumQuery;
+    const albums = await Album.paginate(page, count, { simple: false, search });
 
-        const albums = await Album.paginate(page, count, { simple, search });
+    return { albums };
+};
+export const GetAlbumListSimpleHandler: MyHandlerMethod<typeof GetAlbumListSimpleSchema> = async (req, reply) => {
+    const { page, count, search } = req.query;
 
-        return { albums };
-    },
-    async load(req, reply) {
-        const { id } = req.params as AlbumParams;
-        if (!isValidObjectId(id)) throw reply.badRequest();
+    const albums = await Album.paginate(page, count, { simple: true, search });
 
-        const album = await Album.findById(id).lean();
-        if (!album) throw reply.notFound();
+    return { albums };
+};
 
-        req.state.album = album;
-    },
-    async show(req, reply) {
-        const { album } = req.state;
+export const GetAlbumHandler: MyHandlerMethod<typeof GetAlbumSchema> = async (req, reply) => {
+    const { id } = req.params;
+    if (!isValidObjectId(id)) throw reply.badRequest();
 
-        return { album };
-    },
-    async showPics(req, reply) {
-        const { album } = req.state;
-        const { page, count } = req.query as AlbumQuery;
+    const album = await Album.findById(id).lean();
+    if (!album) throw reply.notFound();
 
-        const pictures = await Picture.find({
-            album: album?._id,
-        }).paginate(page, count);
-
-        return { album, pictures };
-    },
-} as {
-    index: RouteHandlerMethod;
-    load: RouteHandlerMethod;
-    show: RouteHandlerMethod;
-    showPics: RouteHandlerMethod;
+    return { album };
 };
