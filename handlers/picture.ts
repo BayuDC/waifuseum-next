@@ -1,5 +1,8 @@
+import download from 'download';
+import { parse } from 'node-html-parser';
+
 import { MyHandlerMethod } from '../app.d';
-import { GetPictureListSchema } from '../schemas/picture';
+import { GetPictureListSchema, GetPixivPictureSchema } from '../schemas/picture';
 
 import Album from '../models/album';
 import Picture from '../models/picture';
@@ -39,4 +42,18 @@ export const GetPictureListTodayHandler: MyHandlerMethod<typeof GetPictureListSc
         });
 
     return { pictures };
+};
+
+export const GetPixivPictureHandler: MyHandlerMethod<typeof GetPixivPictureSchema> = async (req, reply) => {
+    const { id } = req.params;
+    const source = 'https://www.pixiv.net/en/artworks/' + id;
+
+    const res = await download(source, {
+        encoding: 'utf-8',
+    });
+
+    const root = parse(res as any);
+    const data = JSON.parse(root.getElementById('meta-preload-data').getAttribute('content')!);
+
+    return { source, urls: data.illust[id].urls };
 };

@@ -36,3 +36,9 @@ export const GetPictureListSchema = {
         }),
     },
 };
+
+export const GetPixivPictureSchema = {
+    params: Type.Object({
+        id: Type.String(),
+    }),
+};
