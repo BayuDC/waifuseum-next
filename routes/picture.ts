@@ -1,12 +1,16 @@
 import { FastifyPluginCallback } from 'fastify';
 
-import { GetPictureSchema } from '../schemas/picture';
-import { GetTodayPictureHandler } from '../handlers/picture';
+import { GetPictureListSchema } from '../schemas/picture';
+import { GetPictureListHandler, GetPictureListTodayHandler } from '../handlers/picture';
 
 export default (function (fastify, options, done) {
+    fastify.get('/pictures', {
+        schema: GetPictureListSchema,
+        handler: GetPictureListHandler,
+    });
     fastify.get('/pictures/today', {
-        schema: GetPictureSchema,
-        handler: GetTodayPictureHandler,
+        schema: GetPictureListSchema,
+        handler: GetPictureListTodayHandler,
     });
 
     done();

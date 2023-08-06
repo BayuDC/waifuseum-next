@@ -1,4 +1,3 @@
-import { isValidObjectId } from 'mongoose';
 import { MyHandlerMethod } from '../app.d';
 import { GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
 
@@ -20,10 +19,9 @@ export const GetAlbumListSimpleHandler: MyHandlerMethod<typeof GetAlbumListSimpl
 };
 
 export const GetAlbumHandler: MyHandlerMethod<typeof GetAlbumSchema> = async (req, reply) => {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) throw reply.badRequest();
+    const { slug } = req.params;
 
-    const album = await Album.findById(id).lean();
+    const album = await Album.findOne({ slug }).lean();
     if (!album) throw reply.notFound();
 
     return { album };

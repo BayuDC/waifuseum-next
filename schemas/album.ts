@@ -1,9 +1,9 @@
 import { Type } from '@sinclair/typebox';
 
-export const AlbumSchema = Type.Object({
+const AlbumSchema = Type.Object({
     id: Type.String(),
     name: Type.String(),
-    alias: Type.String(),
+    alias: Type.Optional(Type.String()),
     slug: Type.String(),
     private: Type.Boolean(),
     community: Type.Boolean(),
@@ -22,8 +22,8 @@ export const AlbumSchema = Type.Object({
             url: Type.String(),
             urls: Type.Object({
                 thumbnail: Type.String(),
-                minimal: Type.String(),
-                standard: Type.String(),
+                minimal: Type.Optional(Type.String()),
+                standard: Type.Optional(Type.String()),
                 original: Type.String(),
             }),
         })
@@ -31,10 +31,10 @@ export const AlbumSchema = Type.Object({
     createdAt: Type.String(),
     updatedAt: Type.String(),
 });
-export const AlbumSimpleSchema = Type.Object({
+const AlbumSimpleSchema = Type.Object({
     id: Type.String(),
     name: Type.String(),
-    alias: Type.String(),
+    alias: Type.Optional(Type.String()),
     slug: Type.String(),
 });
 
@@ -45,7 +45,7 @@ const querystring = Type.Object({
 });
 
 const params = Type.Object({
-    id: Type.Required(Type.String()),
+    slug: Type.Required(Type.String()),
 });
 
 export const GetAlbumListSchema = {

@@ -13,7 +13,7 @@ export default (function (fastify, options, done) {
         handler: GetAlbumListSimpleHandler,
     });
 
-    fastify.get('/albums/:id', {
+    fastify.get('/albums/:slug', {
         schema: GetAlbumSchema,
         handler: GetAlbumHandler,
     });
