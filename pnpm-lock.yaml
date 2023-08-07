@@ -29,6 +29,9 @@ dependencies:
   '@sinclair/typebox':
     specifier: ^0.30.0
     version: 0.30.0
+  '@typegoose/typegoose':
+    specifier: ^11.4.1
+    version: 11.4.1(mongoose@7.4.0)
   download:
     specifier: ^8.0.0
     version: 8.0.0
@@ -234,6 +237,20 @@ packages:
   /@tsconfig/node16@1.0.3:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
     dev: true
+
+  /@typegoose/typegoose@11.4.1(mongoose@7.4.0):
+    resolution: {integrity: sha512-mOMEUBaxnSYtnGWAMsduh1+4MeJHpYN2+rhZ5rHq9mKRT8Ix3nsR0QWEnFIIqTnksL0Yt3Ww7Qj8IFzWhoIyoQ==}
+    engines: {node: '>=14.17.0'}
+    peerDependencies:
+      mongoose: ~7.4.0
+    dependencies:
+      lodash: 4.17.21
+      loglevel: 1.8.1
+      mongoose: 7.4.0
+      reflect-metadata: 0.1.13
+      semver: 7.5.4
+      tslib: 2.6.1
+    dev: false
 
   /@types/decompress@4.2.4:
     resolution: {integrity: sha512-/C8kTMRTNiNuWGl5nEyKbPiMv6HA+0RbEXzFhFBEzASM6+oa4tJro9b8nj7eRlOFfuLdzUU+DS/GPDlvvzMOhA==}
@@ -1077,6 +1094,15 @@ packages:
       set-cookie-parser: 2.5.0
     dev: false
 
+  /lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: false
+
+  /loglevel@1.8.1:
+    resolution: {integrity: sha512-tCRIJM51SHjAayKwC+QAg8hT8vg6z7GSgLJKGvzuPb1Wc+hLzqtuVLxp6/HzSPOozuK+8ErAhy7U/sVzw8Dgfg==}
+    engines: {node: '>= 0.6.0'}
+    dev: false
+
   /lowercase-keys@1.0.0:
     resolution: {integrity: sha512-RPlX0+PHuvxVDZ7xX+EBVAp4RsVxP/TdDSN2mJYdiq1Lc4Hz7EUSjUI7RZrKKlmrIzVhf6Jo2stj7++gVarS0A==}
     engines: {node: '>=0.10.0'}
@@ -1518,6 +1544,10 @@ packages:
     engines: {node: '>= 12.13.0'}
     dev: false
 
+  /reflect-metadata@0.1.13:
+    resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
+    dev: false
+
   /require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
@@ -1589,6 +1619,14 @@ packages:
 
   /semver@7.3.7:
     resolution: {integrity: sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      lru-cache: 6.0.0
+    dev: false
+
+  /semver@7.5.4:
+    resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -1793,6 +1831,10 @@ packages:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
+
+  /tslib@2.6.1:
+    resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
+    dev: false
 
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}

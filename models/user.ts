@@ -1,10 +1,17 @@
-import mongoose from 'mongoose';
-import { UserDocument, UserModel } from './types/user';
+import { prop, plugin, getModelForClass } from '@typegoose/typegoose';
 
-const schema = new mongoose.Schema<UserDocument>({
-    name: { type: String },
-    email: { type: String },
-});
-schema.plugin(require('mongoose-lean-id'));
+@plugin(require('mongoose-lean-id'))
+export class User {
+    @prop()
+    public name!: string;
 
-export default mongoose.model<UserDocument, UserModel>('User', schema);
+    @prop()
+    public email!: string;
+
+    @prop()
+    public createdAt!: Date;
+    @prop()
+    public updatedAt!: Date;
+}
+
+export default () => getModelForClass(User);

@@ -1,22 +1,24 @@
-import mongoose, { Schema } from 'mongoose';
-import { TagDocument, TagModel } from './types/tag';
+import { prop, getModelForClass, Ref } from '@typegoose/typegoose';
 
-import User from './user';
+import { User } from './user';
 
-const schema: Schema<TagDocument> = new mongoose.Schema(
-    {
-        name: { type: String },
-        alias: { type: String },
-        description: { type: String },
-        slug: { type: String },
-        createdBy: {
-            type: mongoose.mongo.ObjectId,
-            ref: User,
-        },
-        createdAt: { type: Date },
-        updatedAt: { type: Date },
-    },
-    { versionKey: false }
-);
+export class Tag {
+    @prop()
+    public name!: string;
 
-export default mongoose.model<TagDocument, TagModel>('Tag', schema);
+    @prop()
+    public alias?: string;
+
+    @prop()
+    public slug!: string;
+
+    @prop({ ref: () => User })
+    public createdBy!: Ref<User>;
+
+    @prop()
+    public createdAt!: Date;
+    @prop()
+    public updatedAt!: Date;
+}
+
+export default () => getModelForClass(Tag);

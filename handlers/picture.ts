@@ -4,44 +4,39 @@ import { parse } from 'node-html-parser';
 import { MyHandlerMethod } from '../app.d';
 import { GetPictureListSchema, GetPixivPictureSchema } from '../schemas/picture';
 
-import Album from '../models/album';
-import Picture from '../models/picture';
+import { Album, Picture } from '../models';
 
 const dayInMs = 24 * 60 * 60 * 1000;
 
 export const GetPictureListHandler: MyHandlerMethod<typeof GetPictureListSchema> = async (req, reply) => {
-    const { page, count, album: albumSlug } = req.query;
+    const { page, count, album: slug } = req.query;
 
-    if (!albumSlug) {
-        const pictures = await Picture.find()
-            .paginate(page, count)
-            .populate({
-                path: 'album',
-                options: { simple: true },
-            });
-        return { pictures };
+    if (!slug) {
+        return { pictures: await Picture.find().paginate(page, count).preload().lean({ getters: true }) };
     }
 
-    const album = await Album.findOne({ slug: albumSlug }).setOptions({ simple: true }).lean();
+    const album = await Album.findOne({ slug }).lean({ getters: true });
     if (!album) throw reply.notFound();
 
-    const pictures = await Picture.find({ album: album.id }).paginate(page, count);
-    return { pictures };
+    return {
+        pictures: await Picture.find({ album: album._id })
+            .select({ album: 0 })
+            .paginate(page, count)
+            .lean({ getters: true }),
+    };
 };
 
 export const GetPictureListTodayHandler: MyHandlerMethod<typeof GetPictureListSchema> = async (req, reply) => {
     const { page, count } = req.query;
 
-    const pictures = await Picture.find({
-        createdAt: { $gt: new Date(Date.now() - dayInMs) },
-    })
-        .paginate(page, count)
-        .populate({
-            path: 'album',
-            options: { simple: true },
-        });
-
-    return { pictures };
+    return {
+        pictures: await Picture.find({
+            createdAt: { $gt: new Date(Date.now() - dayInMs) },
+        })
+            .paginate(page, count)
+            .preload()
+            .lean({ getters: true }),
+    };
 };
 
 export const GetPixivPictureHandler: MyHandlerMethod<typeof GetPixivPictureSchema> = async (req, reply) => {
