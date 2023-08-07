@@ -1,13 +1,21 @@
-import { FastifyPluginCallback, RouteShorthandOptionsWithHandler } from 'fastify';
+import { FastifyPluginCallback } from 'fastify';
 
-import handler from '../handlers/picture';
-import schema from '../schemas/picture';
+import { GetPictureListSchema, GetPixivPictureSchema } from '../schemas/picture';
+import { GetPictureListHandler, GetPictureListTodayHandler, GetPixivPictureHandler } from '../handlers/picture';
 
 export default (function (fastify, options, done) {
+    fastify.get('/pictures', {
+        schema: GetPictureListSchema,
+        handler: GetPictureListHandler,
+    });
     fastify.get('/pictures/today', {
-        schema: schema.index,
-        handler: handler.index,
-    } as RouteShorthandOptionsWithHandler);
+        schema: GetPictureListSchema,
+        handler: GetPictureListTodayHandler,
+    });
+    fastify.get('/pictures/pixiv/:id', {
+        schema: GetPixivPictureSchema,
+        handler: GetPixivPictureHandler,
+    });
 
     done();
 } as FastifyPluginCallback);

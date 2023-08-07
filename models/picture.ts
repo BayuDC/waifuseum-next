@@ -1,67 +1,62 @@
-import mongoose, { Schema, Query } from 'mongoose';
-import { PictureDocument, PictureModel, PictureUrlDocument } from './types/picture';
+import { prop, pre, plugin, getModelForClass, types, queryMethod } from '@typegoose/typegoose';
+import { User } from './user';
+import { Album } from './album';
 
-const schema: Schema = new mongoose.Schema<PictureDocument>(
-    {
-        url: { type: String },
-        urls: {
-            type: {
-                base: { type: String },
-                thumbnail: { type: String },
-                minimal: { type: String },
-                standard: { type: String },
-            },
-            get(v: PictureUrlDocument) {
-                return {
-                    base: v.base,
-                    original: v.base,
-                    thumbnail: v.base + v.thumbnail,
-                    minimal: v.base + v.minimal,
-                    standard: v.base + v.standard,
-                };
-            },
-        },
-        source: { type: String },
-        width: { type: Number },
-        height: { type: Number },
-        album: {
-            type: mongoose.mongo.ObjectId,
-            ref: 'Album',
-        },
-        createdBy: {
-            type: mongoose.mongo.ObjectId,
-            ref: 'User',
-        },
-        createdAt: { type: Date },
-        updatedAt: { type: Date },
-    },
-    {
-        versionKey: false,
-        toJSON: {
-            virtuals: true,
-        },
-        query: {
-            paginate(page: number, count: number) {
-                return this.skip(count * (page - 1)).limit(count);
-            },
-        },
-    }
-);
-schema.plugin(require('mongoose-lean-id'));
-schema.plugin(require('mongoose-lean-getters'));
+@plugin(require('mongoose-lean-id'))
+@plugin(require('mongoose-lean-getters'))
+@pre('find', function () {
+    this.sort({ createdAt: 'desc' });
+})
+@queryMethod(paginate)
+@queryMethod(preload)
+export class Picture {
+    @prop()
+    public url!: string;
 
-schema.pre(/^find/, function (this: Query<any, PictureDocument>, next) {
-    this.select({
-        url: 1,
-        urls: 1,
-        source: 1,
-        createdAt: 1,
-        updatedAt: 1,
+    @prop({
+        get(v) {
+            return {
+                base: v.base,
+                original: v.base,
+                thumbnail: v.base + v.thumbnail,
+                minimal: v.base + v.minimal,
+                standard: v.base + v.standard,
+            };
+        },
     })
-        .sort({ createdAt: 'desc' })
-        .lean({ getters: true });
+    public urls!: object;
 
-    next();
-});
+    @prop()
+    public source?: string;
 
-export default mongoose.model<PictureDocument, PictureModel>('Picture', schema);
+    @prop()
+    public height!: number;
+
+    @prop()
+    public width!: number;
+
+    @prop({ ref: () => Album })
+    public album!: types.Ref<Album>;
+
+    @prop({ ref: () => User })
+    public createdBy!: types.Ref<User>;
+
+    @prop()
+    public createdAt!: Date;
+    @prop()
+    public updatedAt!: Date;
+}
+
+function paginate(this: types.QueryHelperThis<typeof Picture, PictureQuery>, page: number, count: number) {
+    return this.skip(count * (page - 1)).limit(count);
+}
+function preload(this: types.QueryHelperThis<typeof Picture, PictureQuery>) {
+    return this.populate('album', ['name', 'slug', 'alias']);
+}
+
+interface PictureQuery {
+    paginate: types.AsQueryMethod<typeof paginate>;
+    preload: types.AsQueryMethod<typeof preload>;
+}
+
+export default () => getModelForClass<typeof Picture, PictureQuery>(Picture);

@@ -1,13 +1,9 @@
 import { FastifyPluginCallback } from 'fastify';
 import fp from 'fastify-plugin';
 
-import { AlbumDocument } from '../models/types/album';
-
 declare module 'fastify' {
     interface FastifyRequest {
-        state: {
-            album?: AlbumDocument;
-        };
+        state: object | unknown;
     }
 }
 

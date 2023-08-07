@@ -1,88 +1,84 @@
-import mongoose, { Schema } from 'mongoose';
-import { AlbumDocument, AlbumModel } from './types/album';
+import { prop, pre, plugin, queryMethod, getModelForClass, types } from '@typegoose/typegoose';
 
-import Picture from './picture';
-import User from './user';
-import Tag from './tag';
+import { Picture } from './picture';
+import { User } from './user';
+import { Tag } from './tag';
 
-const schema: Schema = new mongoose.Schema<AlbumDocument>(
-    {
-        name: { type: String },
-        alias: { type: String },
-        description: { type: String },
-        slug: { type: String },
-        private: { type: Boolean },
-        community: { type: Boolean },
-        tags: [{ type: mongoose.mongo.ObjectId, ref: Tag }],
-        createdBy: {
-            type: mongoose.mongo.ObjectId,
-            ref: User,
-        },
-        createdAt: { type: Date },
-        updatedAt: { type: Date },
-    },
-    {
-        versionKey: false,
-        toJSON: { virtuals: true },
-    }
-);
+@plugin(require('mongoose-lean-id'))
+@queryMethod(paginate)
+@queryMethod(search)
+@queryMethod(preload)
+@pre('find', function () {
+    this.sort({ updatedAt: 'desc' });
+})
+export class Album {
+    @prop()
+    public name!: string;
 
-schema.plugin(require('mongoose-lean-id'));
+    @prop()
+    public alias?: string;
 
-schema.virtual('picturesCount', {
-    ref: Picture,
-    localField: '_id',
-    foreignField: 'album',
-    count: true,
-});
-schema.virtual('pictures', {
-    ref: Picture,
-    localField: '_id',
-    foreignField: 'album',
-    options: {
-        select: {
-            _id: 1,
-        },
-        sort: {
-            createdAt: 'desc',
-        },
-    },
-});
+    @prop()
+    public slug!: string;
 
-schema.pre(/^find/, function (next) {
-    const { simple, search } = this.getOptions();
+    @prop()
+    public private!: boolean;
 
-    if (search) {
-        this.where({ slug: { $regex: '.*' + search + '.*' } });
-    }
+    @prop()
+    public community!: boolean;
 
-    if (simple) {
-        this.select({ name: 1, slug: 1 });
-    } else {
-        this.select({ channelId: 0 });
-        // @ts-ignore
-        this.populate('picturesCount');
-        // @ts-ignore
-        this.populate({
+    @prop({
+        ref: () => Picture,
+        localField: '_id',
+        foreignField: 'album',
+        count: true,
+    })
+    public picturesCount!: number;
+
+    @prop({
+        ref: () => Picture,
+        localField: '_id',
+        foreignField: 'album',
+    })
+    public pictures!: types.Ref<Picture>[];
+
+    @prop({ ref: () => Tag })
+    public tags!: types.Ref<Tag>[];
+
+    @prop({ ref: () => User })
+    public createdBy!: types.Ref<User>;
+
+    @prop()
+    public createdAt!: Date;
+    @prop()
+    public updatedAt!: Date;
+}
+
+function paginate(this: types.QueryHelperThis<typeof Album, AlbumQuery>, page: number, count: number) {
+    return this.skip(count * (page - 1)).limit(count);
+}
+function search(this: types.QueryHelperThis<typeof Album, AlbumQuery>, keyword?: string) {
+    if (keyword) return this.where({ slug: { $regex: '.*' + keyword + '.*' } });
+    return this;
+}
+function preload(this: types.QueryHelperThis<typeof Album, AlbumQuery>) {
+    return this.populate({
+        path: 'tags',
+        select: ['name', 'alias', 'slug'],
+    })
+        .populate({
             path: 'pictures',
-            perDocumentLimit: 3,
-        });
-        // @ts-ignore
-        this.populate('createdBy', 'name');
-        // @ts-ignore
-        this.populate('tags', ['name', 'slug', 'alias']);
-    }
+            perDocumentLimit: 5,
+            select: ['url', 'urls'],
+            options: { sort: { createdAt: 'desc' } },
+        })
+        .populate({ path: 'picturesCount' });
+}
 
-    next();
-});
+interface AlbumQuery {
+    paginate: types.AsQueryMethod<typeof paginate>;
+    search: types.AsQueryMethod<typeof search>;
+    preload: types.AsQueryMethod<typeof preload>;
+}
 
-schema.static('paginate', async function (page, count, options) {
-    return await this.find()
-        .sort({ updatedAt: 'desc' })
-        .setOptions(options)
-        .skip(count * (page - 1))
-        .limit(count)
-        .lean();
-});
-
-export default mongoose.model<AlbumDocument, AlbumModel>('Album', schema);
+export default () => getModelForClass<typeof Album, AlbumQuery>(Album);

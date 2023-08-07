@@ -1,43 +1,44 @@
-import { FastifySchema } from 'fastify';
+import { Type } from '@sinclair/typebox';
 
-const pictureSchema = {
-    type: 'object',
-    properties: {
-        id: { type: 'string' },
-        url: { type: 'string' },
-        urls: {
-            type: 'object',
-            properties: {
-                thumbnail: { type: 'string' },
-                minimal: { type: 'string' },
-                standard: { type: 'string' },
-                original: { type: 'string' },
-            },
-        },
-        source: { type: 'string' },
-        createdAt: { type: 'string' },
-        updatedAt: { type: 'string' },
-    },
-};
+const PictureSchema = Type.Object({
+    id: Type.String(),
+    url: Type.String(),
+    urls: Type.Object({
+        thumbnail: Type.String(),
+        minimal: Type.Optional(Type.String()),
+        standard: Type.Optional(Type.String()),
+        original: Type.String(),
+    }),
+    album: Type.Optional(
+        Type.Object({
+            id: Type.String(),
+            name: Type.String(),
+            alias: Type.String(),
+            slug: Type.String(),
+        })
+    ),
+    source: Type.Optional(Type.String()),
+    createdAt: Type.String(),
+    updatedAt: Type.String(),
+});
 
-const querySchema = {
-    type: 'object',
-    properties: {
-        page: { type: 'number', nullable: true, default: 1 },
-        count: { type: 'number', nullable: true, default: 10 },
-    },
-};
+const querystring = Type.Object({
+    page: Type.Number({ default: 1 }),
+    count: Type.Number({ default: 10, maximum: 500 }),
+    album: Type.Optional(Type.String()),
+});
 
-const index: FastifySchema = {
-    querystring: querySchema,
+export const GetPictureListSchema = {
+    querystring,
     response: {
-        '2xx': {
-            pictures: {
-                type: 'array',
-                items: pictureSchema,
-            },
-        },
+        '2xx': Type.Object({
+            pictures: Type.Array(PictureSchema),
+        }),
     },
 };
 
-export default { index };
+export const GetPixivPictureSchema = {
+    params: Type.Object({
+        id: Type.String(),
+    }),
+};

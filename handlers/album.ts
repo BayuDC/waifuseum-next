@@ -1,54 +1,28 @@
-import { RouteHandlerMethod } from 'fastify';
-import { isValidObjectId } from 'mongoose';
+import { MyHandlerMethod } from '../app.d';
+import { GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
 
-import Album from '../models/album';
-import Picture from '../models/picture';
+import { Album } from '../models';
 
-interface AlbumQuery {
-    page: number;
-    count: number;
-    simple: boolean;
-    search: string;
-}
-interface AlbumParams {
-    id: string;
-}
+export const GetAlbumListHandler: MyHandlerMethod<typeof GetAlbumListSchema> = async (req, reply) => {
+    const { page, count, search: keyword } = req.query;
 
-export default {
-    async index(req, reply) {
-        const { page, count, simple, search } = req.query as AlbumQuery;
+    return {
+        albums: await Album.find().paginate(page, count).search(keyword).preload().lean({ getters: true }),
+    };
+};
+export const GetAlbumListSimpleHandler: MyHandlerMethod<typeof GetAlbumListSimpleSchema> = async (req, reply) => {
+    const { page, count, search: keyword } = req.query;
 
-        const albums = await Album.paginate(page, count, { simple, search });
+    return {
+        albums: await Album.find().paginate(page, count).search(keyword).select(['name', 'slug', 'alias']).lean(),
+    };
+};
 
-        return { albums };
-    },
-    async load(req, reply) {
-        const { id } = req.params as AlbumParams;
-        if (!isValidObjectId(id)) throw reply.badRequest();
+export const GetAlbumHandler: MyHandlerMethod<typeof GetAlbumSchema> = async (req, reply) => {
+    const { slug } = req.params;
 
-        const album = await Album.findById(id).lean();
-        if (!album) throw reply.notFound();
+    const album = await Album.findOne({ slug }).preload().lean({ getters: true });
+    if (!album) throw reply.notFound();
 
-        req.state.album = album;
-    },
-    async show(req, reply) {
-        const { album } = req.state;
-
-        return { album };
-    },
-    async showPics(req, reply) {
-        const { album } = req.state;
-        const { page, count } = req.query as AlbumQuery;
-
-        const pictures = await Picture.find({
-            album: album?._id,
-        }).paginate(page, count);
-
-        return { album, pictures };
-    },
-} as {
-    index: RouteHandlerMethod;
-    load: RouteHandlerMethod;
-    show: RouteHandlerMethod;
-    showPics: RouteHandlerMethod;
+    return { album };
 };
