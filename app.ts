@@ -6,23 +6,37 @@ import './db';
 const port = process.env.PORT || 8080;
 const host = process.env.HOST || '127.0.0.1';
 
-const fastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
+const fastify = Fastify({
+    logger: {
+        level: 'debug',
+        transport: {
+            target: '@mgcrea/pino-pretty-compact',
+            options: { translateTime: 'HH:MM:ss Z', ignore: 'pid,hostname' },
+        },
+    },
+    disableRequestLogging: true,
+}).withTypeProvider<TypeBoxTypeProvider>();
 
 fastify.register(import('@fastify/cors'));
 fastify.register(import('@fastify/sensible'));
+fastify.register(import('@fastify/swagger'));
+fastify.register(import('@fastify/swagger-ui'), {
+    routePrefix: '/docs',
+});
+fastify.register(import('@mgcrea/fastify-request-logger'));
 
 fastify.register(import('./plugins/error'));
 fastify.register(import('./plugins/state'));
 
-fastify.register(require('./routes/main'));
 fastify.register(require('./routes/album'));
 fastify.register(require('./routes/picture'));
+fastify.get('/', async req => {
+    return { message: 'Hello World!' };
+});
 
 fastify.listen({ port: port as number, host }, (err, addr) => {
     if (err) {
         console.log(err);
         process.exit(1);
     }
-
-    console.log('Server running at', addr);
 });
