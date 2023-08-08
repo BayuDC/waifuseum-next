@@ -27,10 +27,11 @@ fastify.register(import('@mgcrea/fastify-request-logger'));
 
 fastify.register(import('./plugins/error'));
 fastify.register(import('./plugins/state'));
+fastify.register(import('./plugins/model'));
 
 fastify.register(require('./routes/album'));
 fastify.register(require('./routes/picture'));
-fastify.get('/', async req => {
+fastify.get('/', async function (req) {
     return { message: 'Hello World!' };
 });
 

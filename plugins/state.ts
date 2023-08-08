@@ -10,7 +10,6 @@ declare module 'fastify' {
 export default fp(function (fastify, options, done) {
     fastify.addHook('onRequest', (req, reply, done) => {
         req.state = {};
-
         done();
     });
     done();
