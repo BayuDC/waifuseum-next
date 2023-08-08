@@ -1,5 +1,20 @@
-import { MyHandlerMethod } from '.';
-import { CheckTagExistsSchema, GetTagListSchema, GetTagListSimpleSchema, GetTagSchema } from '../schemas/tag';
+import { MyHandlerMethod } from './_';
+import {
+    CheckTagExistsSchema,
+    GetTagListSchema,
+    GetTagListSimpleSchema,
+    GetTagSchema,
+    LoadTagSchema,
+} from '../schemas/tag';
+
+export const LoadTagPreHandler = async function (req, reply) {
+    if (!req.query.tag) return;
+
+    const tag = await this.Tag.findOne({ slug: req.query.tag }).lean();
+    if (!tag) throw reply.notFound('Tag not found');
+
+    req.state.tag = tag;
+} as MyHandlerMethod<typeof LoadTagSchema>;
 
 export const GetTagListHandler = async function (req, reply) {
     const { page, count, search: keyword } = req.query;

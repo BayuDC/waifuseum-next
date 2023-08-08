@@ -13,7 +13,7 @@ const PictureSchema = Type.Object({
         Type.Object({
             id: Type.String(),
             name: Type.String(),
-            alias: Type.String(),
+            alias: Type.Optional(Type.String()),
             slug: Type.String(),
         })
     ),
@@ -22,23 +22,39 @@ const PictureSchema = Type.Object({
     updatedAt: Type.String(),
 });
 
-const querystring = Type.Object({
-    page: Type.Number({ default: 1 }),
-    count: Type.Number({ default: 10, maximum: 500 }),
-    album: Type.Optional(Type.String()),
+const AlbumSchema = Type.Object({
+    id: Type.String(),
+    name: Type.String(),
+    alias: Type.Optional(Type.String()),
+    slug: Type.String(),
+    private: Type.Boolean(),
+    community: Type.Boolean(),
+    picturesCount: Type.Number(),
+    createdAt: Type.String(),
+    updatedAt: Type.String(),
 });
 
 export const GetPictureListSchema = {
-    querystring,
+    querystring: Type.Object({
+        page: Type.Number({ default: 1 }),
+        count: Type.Number({ default: 10, maximum: 500 }),
+        album: Type.Optional(Type.String()),
+        tag: Type.Optional(Type.String()),
+    }),
     response: {
         '2xx': Type.Object({
             pictures: Type.Array(PictureSchema),
+            album: Type.Optional(AlbumSchema),
+            // tag: Type.Optional(TagSchema),
         }),
     },
 };
 
 export const GetPictureListTodaySchema = {
-    querystring,
+    querystring: Type.Object({
+        page: Type.Number({ default: 1 }),
+        count: Type.Number({ default: 10, maximum: 500 }),
+    }),
     response: {
         '2xx': Type.Object({
             picturesCount: Type.Number(),

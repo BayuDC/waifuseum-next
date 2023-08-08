@@ -20,7 +20,7 @@ export class Tag {
     @prop({ ref: () => Album, select: false })
     public albums!: types.Ref<Album>[];
 
-    @prop({ ref: () => User })
+    @prop({ ref: () => User, select: 0 })
     public createdBy!: types.Ref<User>;
 
     @prop()

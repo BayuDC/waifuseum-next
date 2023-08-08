@@ -1,13 +1,13 @@
 import { Type } from '@sinclair/typebox';
 
-export const TagSimpleSchema = Type.Object({
+const TagSimpleSchema = Type.Object({
     id: Type.String(),
     name: Type.String(),
     alias: Type.String(),
     slug: Type.String(),
 });
 
-export const TagSchema = Type.Object({
+const TagSchema = Type.Object({
     id: Type.String(),
     name: Type.String(),
     alias: Type.String(),
@@ -54,4 +54,9 @@ export const CheckTagExistsSchema = {
     response: {
         default: Type.Boolean(),
     },
+};
+export const LoadTagSchema = {
+    querystring: Type.Object({
+        tag: Type.Optional(Type.String()),
+    }),
 };

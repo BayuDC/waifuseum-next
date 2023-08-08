@@ -1,42 +1,40 @@
 import download from 'download';
 import { parse } from 'node-html-parser';
 
-import { MyHandlerMethod } from '.';
+import { MyHandlerMethod } from './_';
 import { GetPictureListSchema, GetPictureListTodaySchema, GetPixivPictureSchema } from '../schemas/picture';
 
 const dayInMs = 24 * 60 * 60 * 1000;
 
 export const GetPictureListHandler = async function (req, reply) {
-    const { page, count, album: slug } = req.query;
+    const { page, count } = req.query;
+    const { album } = req.state;
 
-    if (!slug) {
-        return { pictures: await this.Picture.find().paginate(page, count).preload().lean({ getters: true }) };
-    }
+    const query = this.Picture.find().paginate(page, count);
 
-    const album = await this.Album.findOne({ slug }).lean({ getters: true });
-    if (!album) throw reply.notFound();
+    album ? query.hasAlbum(album._id) : query.preload();
 
-    return {
-        pictures: await this.Picture.find({ album: album._id })
-            .select({ album: 0 })
-            .paginate(page, count)
-            .lean({ getters: true }),
-    };
+    const pictures = await query.lean({ getters: true });
+
+    return { pictures, album };
 } as MyHandlerMethod<typeof GetPictureListSchema>;
 
 export const GetPictureListTodayHandler = async function (req, reply) {
     const { page, count } = req.query;
 
+    const pictures = await this.Picture.find({
+        createdAt: { $gt: new Date(Date.now() - dayInMs) },
+    })
+        .paginate(page, count)
+        .preload()
+        .lean({ getters: true });
+    const picturesCount = await this.Picture.find({
+        createdAt: { $gt: new Date(Date.now() - dayInMs) },
+    }).count();
+
     return {
-        pictures: await this.Picture.find({
-            createdAt: { $gt: new Date(Date.now() - dayInMs) },
-        })
-            .paginate(page, count)
-            .preload()
-            .lean({ getters: true }),
-        picturesCount: await this.Picture.find({
-            createdAt: { $gt: new Date(Date.now() - dayInMs) },
-        }).count(),
+        pictures,
+        picturesCount,
     };
 } as MyHandlerMethod<typeof GetPictureListTodaySchema>;
 

@@ -1,36 +1,51 @@
-import { MyHandlerMethod } from '.';
-import { CheckAlbumExistsSchema, GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
+import { MyHandlerMethod } from './_';
+import {
+    CheckAlbumExistsSchema,
+    GetAlbumListSchema,
+    GetAlbumListSimpleSchema,
+    GetAlbumSchema,
+    LoadAlbumSchema,
+} from '../schemas/album';
+
+export const LoadAlbumPreHandler = async function (req, reply) {
+    if (!req.query.album) return;
+
+    const album = await this.Album.findOne({ slug: req.query.album }).populate('picturesCount').lean();
+    if (!album) throw reply.notFound('Album not found');
+
+    req.state.album = album;
+} as MyHandlerMethod<typeof LoadAlbumSchema>;
 
 export const GetAlbumListHandler = async function (req, reply) {
     const { page, count, search: keyword } = req.query;
+    const { tag } = req.state;
 
-    const tag = await this.Tag.findOne({ slug: req.query.tag }).lean();
-    if (!tag) throw reply.notFound('Tag not found');
+    const query = this.Album.find().paginate(page, count).preload();
+
+    keyword && query.search(keyword);
+    tag && query.hasTag(tag).select({ tags: 0 });
+
+    const albums = await query.lean({ getters: true });
 
     return {
-        albums: await this.Album.find()
-            .paginate(page, count)
-            .search(keyword)
-            .hasTag(tag?._id)
-            .preload()
-            .lean({ getters: true }),
+        albums,
         tag,
     };
 } as MyHandlerMethod<typeof GetAlbumListSchema>;
 
 export const GetAlbumListSimpleHandler = async function (req, reply) {
     const { page, count, search: keyword } = req.query;
+    const { tag } = req.state;
 
-    const tag = await this.Tag.findOne({ slug: req.query.tag }).lean();
-    if (!tag) throw reply.notFound('Tag not found');
+    const query = this.Album.find().paginate(page, count).select(['name', 'slug', 'alias']);
+
+    keyword && query.search(keyword);
+    tag && query.hasTag(tag).select({ tags: 0 });
+
+    const albums = await query.lean({ getters: true });
 
     return {
-        albums: await this.Album.find()
-            .paginate(page, count)
-            .search(keyword)
-            .hasTag(tag?._id)
-            .select(['name', 'slug', 'alias'])
-            .lean(),
+        albums,
         tag,
     };
 } as MyHandlerMethod<typeof GetAlbumListSimpleSchema>;

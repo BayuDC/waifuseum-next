@@ -11,6 +11,7 @@ import { Album } from './album';
 })
 @queryMethod(paginate)
 @queryMethod(preload)
+@queryMethod(hasAlbum)
 export class Picture {
     @prop()
     public url!: string;
@@ -26,21 +27,30 @@ export class Picture {
             };
         },
     })
-    public urls!: object;
+    public urls!: {
+        base: string;
+        original: string;
+        thumbnail: string;
+        minimal: string;
+        standard: string;
+    };
 
     @prop()
     public source?: string;
 
-    @prop()
+    @prop({ select: 0 })
     public height!: number;
 
-    @prop()
+    @prop({ select: 0 })
     public width!: number;
 
-    @prop({ ref: () => Album })
+    @prop({ select: 0 })
+    public messageId!: string;
+
+    @prop({ ref: () => Album, select: 0 })
     public album!: types.Ref<Album>;
 
-    @prop({ ref: () => User })
+    @prop({ ref: () => User, select: 0 })
     public createdBy!: types.Ref<User>;
 
     @prop()
@@ -52,10 +62,14 @@ export class Picture {
 function preload(this: types.QueryHelperThis<typeof Picture, PictureQuery>) {
     return this.populate('album', ['name', 'slug', 'alias']);
 }
+function hasAlbum(this: types.QueryHelperThis<typeof Picture, PictureQuery>, albumId: any) {
+    return this.where({ album: albumId });
+}
 
 interface PictureQuery {
     paginate: types.AsQueryMethod<typeof paginate<typeof Picture, PictureQuery>>;
     preload: types.AsQueryMethod<typeof preload>;
+    hasAlbum: types.AsQueryMethod<typeof hasAlbum>;
 }
 
 export default () => getModelForClass<typeof Picture, PictureQuery>(Picture);

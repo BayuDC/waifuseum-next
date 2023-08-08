@@ -1,5 +1,20 @@
 import { Type } from '@sinclair/typebox';
-import { TagSchema, TagSimpleSchema } from './tag';
+
+const TagSchema = Type.Object({
+    id: Type.String(),
+    name: Type.String(),
+    alias: Type.String(),
+    slug: Type.String(),
+    createdAt: Type.String(),
+    updatedAt: Type.String(),
+});
+
+const TagSimpleSchema = Type.Object({
+    id: Type.String(),
+    name: Type.String(),
+    alias: Type.String(),
+    slug: Type.String(),
+});
 
 const AlbumSchema = Type.Object({
     id: Type.String(),
@@ -8,7 +23,7 @@ const AlbumSchema = Type.Object({
     slug: Type.String(),
     private: Type.Boolean(),
     community: Type.Boolean(),
-    tags: Type.Array(TagSimpleSchema),
+    tags: Type.Optional(Type.Array(TagSimpleSchema)),
     picturesCount: Type.Number(),
     pictures: Type.Array(
         Type.Object({
@@ -76,4 +91,10 @@ export const CheckAlbumExistsSchema = {
     response: {
         default: Type.Boolean(),
     },
+};
+
+export const LoadAlbumSchema = {
+    querystring: Type.Object({
+        album: Type.Optional(Type.String()),
+    }),
 };

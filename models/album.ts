@@ -20,6 +20,9 @@ export class Album {
     @prop()
     public alias?: string;
 
+    @prop({ select: 0 })
+    public description?: string;
+
     @prop()
     public slug!: string;
 
@@ -44,10 +47,13 @@ export class Album {
     })
     public pictures!: types.Ref<Picture>[];
 
-    @prop({ ref: () => Tag })
+    @prop({ select: 0 })
+    public channelId!: string;
+
+    @prop({ ref: () => Tag, select: 0 })
     public tags!: types.Ref<Tag>[];
 
-    @prop({ ref: () => User })
+    @prop({ ref: () => User, select: 0 })
     public createdBy!: types.Ref<User>;
 
     @prop()
@@ -63,7 +69,7 @@ function preload(this: types.QueryHelperThis<typeof Album, AlbumQuery>) {
     })
         .populate({
             path: 'pictures',
-            perDocumentLimit: 5,
+            perDocumentLimit: 3,
             select: ['url', 'urls'],
             options: { sort: { createdAt: 'desc' } },
         })
