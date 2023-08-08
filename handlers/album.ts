@@ -1,6 +1,7 @@
 import { MyHandlerMethod } from './_';
 import {
     CheckAlbumExistsSchema,
+    GetAlbumListRecentSchema,
     GetAlbumListSchema,
     GetAlbumListSimpleSchema,
     GetAlbumSchema,
@@ -50,10 +51,24 @@ export const GetAlbumListSimpleHandler = async function (req, reply) {
     };
 } as MyHandlerMethod<typeof GetAlbumListSimpleSchema>;
 
+export const GetAlbumListRecentHandler = async function (req, reply) {
+    const { count } = req.query;
+
+    const ids = await this.Picture.find().distinct('album').lean();
+    const albums = await this.Album.find({ _id: { $in: ids } })
+        .limit(count)
+        .preload()
+        .lean({ getters: true });
+
+    return {
+        albums,
+    };
+} as MyHandlerMethod<typeof GetAlbumListRecentSchema>;
+
 export const GetAlbumHandler = async function (req, reply) {
     const { slug } = req.params;
 
-    const album = await this.Album.findOne({ slug }).preload().lean({ getters: true });
+    const album = await this.Album.findOne({ slug }).preload().where('pictures').lean({ getters: true });
     if (!album) throw reply.notFound();
 
     return { album };

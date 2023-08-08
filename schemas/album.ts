@@ -77,6 +77,16 @@ export const GetAlbumListSimpleSchema = {
         }),
     },
 };
+export const GetAlbumListRecentSchema = {
+    querystring: Type.Object({
+        count: Type.Number({ default: 10 }),
+    }),
+    response: {
+        '2xx': Type.Object({
+            albums: Type.Array(AlbumSchema),
+        }),
+    },
+};
 
 export const GetAlbumSchema = {
     params,

@@ -4,10 +4,18 @@ import {
     CheckAlbumExistsHandler,
     GetAlbumHandler,
     GetAlbumListHandler,
+    GetAlbumListRecentHandler,
     GetAlbumListSimpleHandler,
 } from '../handlers/album';
+import {
+    CheckAlbumExistsSchema,
+    GetAlbumListRecentSchema,
+    GetAlbumListSchema,
+    GetAlbumListSimpleSchema,
+    GetAlbumSchema,
+} from '../schemas/album';
+
 import { LoadTagPreHandler } from '../handlers/tag';
-import { CheckAlbumExistsSchema, GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
 
 export default (function (fastify, options, done) {
     fastify.get('/albums', {
@@ -19,6 +27,10 @@ export default (function (fastify, options, done) {
         preHandler: [LoadTagPreHandler],
         schema: GetAlbumListSimpleSchema,
         handler: GetAlbumListSimpleHandler,
+    });
+    fastify.get('/albums/recent', {
+        schema: GetAlbumListRecentSchema,
+        handler: GetAlbumListRecentHandler,
     });
 
     fastify.get('/albums/:slug', {
