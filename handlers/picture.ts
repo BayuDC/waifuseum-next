@@ -8,15 +8,24 @@ const dayInMs = 24 * 60 * 60 * 1000;
 
 export const GetPictureListHandler = async function (req, reply) {
     const { page, count } = req.query;
-    const { album } = req.state;
+    const { album, tag } = req.state;
 
     const query = this.Picture.find().paginate(page, count);
 
-    album ? query.hasAlbum(album._id) : query.preload();
+    if (album) {
+        query.hasAlbum(album._id);
+    } else if (tag) {
+        query.hasAlbum(tag.albums);
+        query.preload();
+    } else {
+        query.preload();
+    }
 
     const pictures = await query.lean({ getters: true });
 
-    return { pictures, album };
+    console.log(tag);
+
+    return { pictures, album, tag };
 } as MyHandlerMethod<typeof GetPictureListSchema>;
 
 export const GetPictureListTodayHandler = async function (req, reply) {

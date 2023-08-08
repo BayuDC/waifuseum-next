@@ -3,10 +3,11 @@ import { FastifyPluginCallback } from 'fastify';
 import { GetPictureListSchema, GetPictureListTodaySchema, GetPixivPictureSchema } from '../schemas/picture';
 import { GetPictureListHandler, GetPictureListTodayHandler, GetPixivPictureHandler } from '../handlers/picture';
 import { LoadAlbumPreHandler } from '../handlers/album';
+import { LoadTagPreHandler } from '../handlers/tag';
 
 export default (function (fastify, options, done) {
     fastify.get('/pictures', {
-        preHandler: [LoadAlbumPreHandler],
+        preHandler: [LoadAlbumPreHandler, LoadTagPreHandler],
         schema: GetPictureListSchema,
         handler: GetPictureListHandler,
     });

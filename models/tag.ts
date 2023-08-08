@@ -17,7 +17,7 @@ export class Tag {
     @prop()
     public slug!: string;
 
-    @prop({ ref: () => Album, select: false })
+    @prop({ ref: () => Album })
     public albums!: types.Ref<Album>[];
 
     @prop({ ref: () => User, select: 0 })

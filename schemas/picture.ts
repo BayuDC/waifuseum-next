@@ -34,6 +34,15 @@ const AlbumSchema = Type.Object({
     updatedAt: Type.String(),
 });
 
+const TagSchema = Type.Object({
+    id: Type.String(),
+    name: Type.String(),
+    alias: Type.String(),
+    slug: Type.String(),
+    createdAt: Type.String(),
+    updatedAt: Type.String(),
+});
+
 export const GetPictureListSchema = {
     querystring: Type.Object({
         page: Type.Number({ default: 1 }),
@@ -45,7 +54,7 @@ export const GetPictureListSchema = {
         '2xx': Type.Object({
             pictures: Type.Array(PictureSchema),
             album: Type.Optional(AlbumSchema),
-            // tag: Type.Optional(TagSchema),
+            tag: Type.Optional(TagSchema),
         }),
     },
 };

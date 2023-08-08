@@ -62,8 +62,12 @@ export class Picture {
 function preload(this: types.QueryHelperThis<typeof Picture, PictureQuery>) {
     return this.populate('album', ['name', 'slug', 'alias']);
 }
-function hasAlbum(this: types.QueryHelperThis<typeof Picture, PictureQuery>, albumId: any) {
-    return this.where({ album: albumId });
+function hasAlbum(this: types.QueryHelperThis<typeof Picture, PictureQuery>, albumIdOrIds: any[] | any) {
+    if (Array.isArray(albumIdOrIds)) {
+        return this.where({ album: { $in: albumIdOrIds } });
+    }
+
+    return this.where({ album: albumIdOrIds });
 }
 
 interface PictureQuery {
