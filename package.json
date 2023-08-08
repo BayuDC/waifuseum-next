@@ -4,7 +4,7 @@
   "description": "Waifuseum api but smaller and faster",
   "scripts": {
     "start": "node build/app",
-    "dev": "tsnd --watch -r dotenv/config app",
+    "dev": "tsnd -r dotenv/config app",
     "build": "tsc"
   },
   "engines": {

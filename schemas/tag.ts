@@ -16,7 +16,14 @@ export const TagSchema = Type.Object({
     updatedAt: Type.String(),
 });
 
+const querystring = Type.Object({
+    page: Type.Number({ default: 1 }),
+    count: Type.Number({ default: 10 }),
+    search: Type.Optional(Type.String()),
+});
+
 export const GetTagListSchema = {
+    querystring,
     response: {
         '2xx': Type.Object({
             tags: Type.Array(TagSchema),
@@ -24,6 +31,7 @@ export const GetTagListSchema = {
     },
 };
 export const GetTagListSimpleSchema = {
+    querystring,
     response: {
         '2xx': Type.Object({
             tags: Type.Array(TagSimpleSchema),

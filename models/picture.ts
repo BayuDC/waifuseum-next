@@ -1,4 +1,6 @@
 import { prop, pre, plugin, getModelForClass, types, queryMethod } from '@typegoose/typegoose';
+import { paginate } from './_';
+
 import { User } from './user';
 import { Album } from './album';
 
@@ -47,15 +49,12 @@ export class Picture {
     public updatedAt!: Date;
 }
 
-function paginate(this: types.QueryHelperThis<typeof Picture, PictureQuery>, page: number, count: number) {
-    return this.skip(count * (page - 1)).limit(count);
-}
 function preload(this: types.QueryHelperThis<typeof Picture, PictureQuery>) {
     return this.populate('album', ['name', 'slug', 'alias']);
 }
 
 interface PictureQuery {
-    paginate: types.AsQueryMethod<typeof paginate>;
+    paginate: types.AsQueryMethod<typeof paginate<typeof Picture, PictureQuery>>;
     preload: types.AsQueryMethod<typeof preload>;
 }
 

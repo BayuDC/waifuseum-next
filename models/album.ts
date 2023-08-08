@@ -1,4 +1,5 @@
 import { prop, pre, plugin, queryMethod, getModelForClass, types } from '@typegoose/typegoose';
+import { search, paginate } from './_';
 
 import { Picture } from './picture';
 import { User } from './user';
@@ -54,13 +55,6 @@ export class Album {
     public updatedAt!: Date;
 }
 
-function paginate(this: types.QueryHelperThis<typeof Album, AlbumQuery>, page: number, count: number) {
-    return this.skip(count * (page - 1)).limit(count);
-}
-function search(this: types.QueryHelperThis<typeof Album, AlbumQuery>, keyword?: string) {
-    if (keyword) return this.where({ slug: { $regex: '.*' + keyword + '.*' } });
-    return this;
-}
 function preload(this: types.QueryHelperThis<typeof Album, AlbumQuery>) {
     return this.populate({
         path: 'tags',
@@ -76,8 +70,8 @@ function preload(this: types.QueryHelperThis<typeof Album, AlbumQuery>) {
 }
 
 interface AlbumQuery {
-    paginate: types.AsQueryMethod<typeof paginate>;
-    search: types.AsQueryMethod<typeof search>;
+    search: types.AsQueryMethod<typeof search<typeof Album, AlbumQuery>>;
+    paginate: types.AsQueryMethod<typeof paginate<typeof Album, AlbumQuery>>;
     preload: types.AsQueryMethod<typeof preload>;
 }
 

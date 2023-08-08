@@ -1,9 +1,12 @@
-import { prop, getModelForClass, types, plugin } from '@typegoose/typegoose';
+import { prop, getModelForClass, types, plugin, queryMethod } from '@typegoose/typegoose';
+import { paginate, search } from './_';
 
 import { User } from './user';
 import { Album } from './album';
 
 @plugin(require('mongoose-lean-id'))
+@queryMethod(search)
+@queryMethod(paginate)
 export class Tag {
     @prop()
     public name!: string;
@@ -26,4 +29,9 @@ export class Tag {
     public updatedAt!: Date;
 }
 
-export default () => getModelForClass(Tag);
+interface TagQuery {
+    search: types.AsQueryMethod<typeof search<typeof Tag, TagQuery>>;
+    paginate: types.AsQueryMethod<typeof paginate<typeof Tag, TagQuery>>;
+}
+
+export default () => getModelForClass<typeof Tag, TagQuery>(Tag);
