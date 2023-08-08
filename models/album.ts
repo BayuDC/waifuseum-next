@@ -1,4 +1,5 @@
 import { prop, pre, plugin, queryMethod, getModelForClass, types } from '@typegoose/typegoose';
+import { search, paginate } from './_';
 
 import { Picture } from './picture';
 import { User } from './user';
@@ -8,6 +9,7 @@ import { Tag } from './tag';
 @queryMethod(paginate)
 @queryMethod(search)
 @queryMethod(preload)
+@queryMethod(hasTag)
 @pre('find', function () {
     this.sort({ updatedAt: 'desc' });
 })
@@ -17,6 +19,9 @@ export class Album {
 
     @prop()
     public alias?: string;
+
+    @prop({ select: 0 })
+    public description?: string;
 
     @prop()
     public slug!: string;
@@ -42,10 +47,13 @@ export class Album {
     })
     public pictures!: types.Ref<Picture>[];
 
-    @prop({ ref: () => Tag })
+    @prop({ select: 0 })
+    public channelId!: string;
+
+    @prop({ ref: () => Tag, select: 0 })
     public tags!: types.Ref<Tag>[];
 
-    @prop({ ref: () => User })
+    @prop({ ref: () => User, select: 0 })
     public createdBy!: types.Ref<User>;
 
     @prop()
@@ -54,13 +62,6 @@ export class Album {
     public updatedAt!: Date;
 }
 
-function paginate(this: types.QueryHelperThis<typeof Album, AlbumQuery>, page: number, count: number) {
-    return this.skip(count * (page - 1)).limit(count);
-}
-function search(this: types.QueryHelperThis<typeof Album, AlbumQuery>, keyword?: string) {
-    if (keyword) return this.where({ slug: { $regex: '.*' + keyword + '.*' } });
-    return this;
-}
 function preload(this: types.QueryHelperThis<typeof Album, AlbumQuery>) {
     return this.populate({
         path: 'tags',
@@ -68,17 +69,22 @@ function preload(this: types.QueryHelperThis<typeof Album, AlbumQuery>) {
     })
         .populate({
             path: 'pictures',
-            perDocumentLimit: 5,
+            perDocumentLimit: 3,
             select: ['url', 'urls'],
             options: { sort: { createdAt: 'desc' } },
         })
         .populate({ path: 'picturesCount' });
 }
+function hasTag(this: types.QueryHelperThis<typeof Album, AlbumQuery>, tagId: any) {
+    if (!tagId) return this;
+    return this.where({ tags: { $in: [tagId] } });
+}
 
 interface AlbumQuery {
-    paginate: types.AsQueryMethod<typeof paginate>;
-    search: types.AsQueryMethod<typeof search>;
+    search: types.AsQueryMethod<typeof search<typeof Album, AlbumQuery>>;
+    paginate: types.AsQueryMethod<typeof paginate<typeof Album, AlbumQuery>>;
     preload: types.AsQueryMethod<typeof preload>;
+    hasTag: types.AsQueryMethod<typeof hasTag>;
 }
 
 export default () => getModelForClass<typeof Album, AlbumQuery>(Album);

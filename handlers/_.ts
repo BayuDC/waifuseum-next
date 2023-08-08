@@ -29,7 +29,7 @@ export type FastifyReplyTypebox<TSchema extends FastifySchema> = FastifyReply<
     TypeBoxTypeProvider
 >;
 
-export type MyHandlerMethod<T> = (
+export type MyHandlerMethod<T extends FastifySchema> = (
     this: FastifyInstance,
     req: FastifyRequestTypebox<T>,
     reply: FastifyReplyTypebox<T>

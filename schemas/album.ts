@@ -1,5 +1,21 @@
 import { Type } from '@sinclair/typebox';
 
+const TagSchema = Type.Object({
+    id: Type.String(),
+    name: Type.String(),
+    alias: Type.String(),
+    slug: Type.String(),
+    createdAt: Type.String(),
+    updatedAt: Type.String(),
+});
+
+const TagSimpleSchema = Type.Object({
+    id: Type.String(),
+    name: Type.String(),
+    alias: Type.String(),
+    slug: Type.String(),
+});
+
 const AlbumSchema = Type.Object({
     id: Type.String(),
     name: Type.String(),
@@ -7,14 +23,7 @@ const AlbumSchema = Type.Object({
     slug: Type.String(),
     private: Type.Boolean(),
     community: Type.Boolean(),
-    tags: Type.Array(
-        Type.Object({
-            id: Type.String(),
-            name: Type.String(),
-            alias: Type.String(),
-            slug: Type.String(),
-        })
-    ),
+    tags: Type.Optional(Type.Array(TagSimpleSchema)),
     picturesCount: Type.Number(),
     pictures: Type.Array(
         Type.Object({
@@ -42,6 +51,7 @@ const querystring = Type.Object({
     page: Type.Number({ default: 1 }),
     count: Type.Number({ default: 10, maximum: 500 }),
     search: Type.Optional(Type.String()),
+    tag: Type.Optional(Type.String()),
 });
 
 const params = Type.Object({
@@ -53,6 +63,7 @@ export const GetAlbumListSchema = {
     response: {
         '2xx': Type.Object({
             albums: Type.Array(AlbumSchema),
+            tag: Type.Optional(TagSchema),
         }),
     },
 };
@@ -62,6 +73,17 @@ export const GetAlbumListSimpleSchema = {
     response: {
         '2xx': Type.Object({
             albums: Type.Array(AlbumSimpleSchema),
+            tag: Type.Optional(TagSimpleSchema),
+        }),
+    },
+};
+export const GetAlbumListRecentSchema = {
+    querystring: Type.Object({
+        count: Type.Number({ default: 10 }),
+    }),
+    response: {
+        '2xx': Type.Object({
+            albums: Type.Array(AlbumSchema),
         }),
     },
 };
@@ -73,4 +95,16 @@ export const GetAlbumSchema = {
             album: AlbumSchema,
         }),
     },
+};
+export const CheckAlbumExistsSchema = {
+    params,
+    response: {
+        default: Type.Boolean(),
+    },
+};
+
+export const LoadAlbumSchema = {
+    querystring: Type.Object({
+        album: Type.Optional(Type.String()),
+    }),
 };
