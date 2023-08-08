@@ -9,6 +9,7 @@ import { Tag } from './tag';
 @queryMethod(paginate)
 @queryMethod(search)
 @queryMethod(preload)
+@queryMethod(hasTag)
 @pre('find', function () {
     this.sort({ updatedAt: 'desc' });
 })
@@ -68,11 +69,16 @@ function preload(this: types.QueryHelperThis<typeof Album, AlbumQuery>) {
         })
         .populate({ path: 'picturesCount' });
 }
+function hasTag(this: types.QueryHelperThis<typeof Album, AlbumQuery>, tagId: any) {
+    if (!tagId) return this;
+    return this.where({ tags: { $in: [tagId] } });
+}
 
 interface AlbumQuery {
     search: types.AsQueryMethod<typeof search<typeof Album, AlbumQuery>>;
     paginate: types.AsQueryMethod<typeof paginate<typeof Album, AlbumQuery>>;
     preload: types.AsQueryMethod<typeof preload>;
+    hasTag: types.AsQueryMethod<typeof hasTag>;
 }
 
 export default () => getModelForClass<typeof Album, AlbumQuery>(Album);

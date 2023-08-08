@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox';
-import { TagSimpleSchema } from './tag';
+import { TagSchema, TagSimpleSchema } from './tag';
 
 const AlbumSchema = Type.Object({
     id: Type.String(),
@@ -36,6 +36,7 @@ const querystring = Type.Object({
     page: Type.Number({ default: 1 }),
     count: Type.Number({ default: 10, maximum: 500 }),
     search: Type.Optional(Type.String()),
+    tag: Type.Optional(Type.String()),
 });
 
 const params = Type.Object({
@@ -47,6 +48,7 @@ export const GetAlbumListSchema = {
     response: {
         '2xx': Type.Object({
             albums: Type.Array(AlbumSchema),
+            tag: Type.Optional(TagSchema),
         }),
     },
 };
@@ -56,6 +58,7 @@ export const GetAlbumListSimpleSchema = {
     response: {
         '2xx': Type.Object({
             albums: Type.Array(AlbumSimpleSchema),
+            tag: Type.Optional(TagSimpleSchema),
         }),
     },
 };

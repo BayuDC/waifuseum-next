@@ -4,16 +4,34 @@ import { CheckAlbumExistsSchema, GetAlbumListSchema, GetAlbumListSimpleSchema, G
 export const GetAlbumListHandler = async function (req, reply) {
     const { page, count, search: keyword } = req.query;
 
+    const tag = await this.Tag.findOne({ slug: req.query.tag }).lean();
+    if (!tag) throw reply.notFound('Tag not found');
+
     return {
-        albums: await this.Album.find().paginate(page, count).search(keyword).preload().lean({ getters: true }),
+        albums: await this.Album.find()
+            .paginate(page, count)
+            .search(keyword)
+            .hasTag(tag?._id)
+            .preload()
+            .lean({ getters: true }),
+        tag,
     };
 } as MyHandlerMethod<typeof GetAlbumListSchema>;
 
 export const GetAlbumListSimpleHandler = async function (req, reply) {
     const { page, count, search: keyword } = req.query;
 
+    const tag = await this.Tag.findOne({ slug: req.query.tag }).lean();
+    if (!tag) throw reply.notFound('Tag not found');
+
     return {
-        albums: await this.Album.find().paginate(page, count).search(keyword).select(['name', 'slug', 'alias']).lean(),
+        albums: await this.Album.find()
+            .paginate(page, count)
+            .search(keyword)
+            .hasTag(tag?._id)
+            .select(['name', 'slug', 'alias'])
+            .lean(),
+        tag,
     };
 } as MyHandlerMethod<typeof GetAlbumListSimpleSchema>;
 
