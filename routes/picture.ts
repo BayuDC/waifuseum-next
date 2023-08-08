@@ -1,6 +1,6 @@
 import { FastifyPluginCallback } from 'fastify';
 
-import { GetPictureListSchema, GetPixivPictureSchema } from '../schemas/picture';
+import { GetPictureListSchema, GetPictureListTodaySchema, GetPixivPictureSchema } from '../schemas/picture';
 import { GetPictureListHandler, GetPictureListTodayHandler, GetPixivPictureHandler } from '../handlers/picture';
 
 export default (function (fastify, options, done) {
@@ -9,7 +9,7 @@ export default (function (fastify, options, done) {
         handler: GetPictureListHandler,
     });
     fastify.get('/pictures/today', {
-        schema: GetPictureListSchema,
+        schema: GetPictureListTodaySchema,
         handler: GetPictureListTodayHandler,
     });
     fastify.get('/pictures/pixiv/:id', {

@@ -2,7 +2,7 @@ import download from 'download';
 import { parse } from 'node-html-parser';
 
 import { MyHandlerMethod } from '../app.d';
-import { GetPictureListSchema, GetPixivPictureSchema } from '../schemas/picture';
+import { GetPictureListSchema, GetPictureListTodaySchema, GetPixivPictureSchema } from '../schemas/picture';
 
 import { Album, Picture } from '../models';
 
@@ -26,7 +26,7 @@ export const GetPictureListHandler: MyHandlerMethod<typeof GetPictureListSchema>
     };
 };
 
-export const GetPictureListTodayHandler: MyHandlerMethod<typeof GetPictureListSchema> = async (req, reply) => {
+export const GetPictureListTodayHandler: MyHandlerMethod<typeof GetPictureListTodaySchema> = async (req, reply) => {
     const { page, count } = req.query;
 
     return {
@@ -36,6 +36,9 @@ export const GetPictureListTodayHandler: MyHandlerMethod<typeof GetPictureListSc
             .paginate(page, count)
             .preload()
             .lean({ getters: true }),
+        picturesCount: await Picture.find({
+            createdAt: { $gt: new Date(Date.now() - dayInMs) },
+        }).count(),
     };
 };
 

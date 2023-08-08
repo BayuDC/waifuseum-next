@@ -37,6 +37,16 @@ export const GetPictureListSchema = {
     },
 };
 
+export const GetPictureListTodaySchema = {
+    querystring,
+    response: {
+        '2xx': Type.Object({
+            picturesCount: Type.Number(),
+            pictures: Type.Array(PictureSchema),
+        }),
+    },
+};
+
 export const GetPixivPictureSchema = {
     params: Type.Object({
         id: Type.String(),
