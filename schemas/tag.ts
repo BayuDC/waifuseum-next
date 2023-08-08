@@ -21,6 +21,9 @@ const querystring = Type.Object({
     count: Type.Number({ default: 10 }),
     search: Type.Optional(Type.String()),
 });
+const params = Type.Object({
+    slug: Type.String(),
+});
 
 export const GetTagListSchema = {
     querystring,
@@ -39,10 +42,16 @@ export const GetTagListSimpleSchema = {
     },
 };
 export const GetTagSchema = {
-    params: Type.Object({ slug: Type.String() }),
+    params,
     response: {
         '2xx': Type.Object({
             tag: TagSchema,
         }),
+    },
+};
+export const CheckTagExistsSchema = {
+    params,
+    response: {
+        default: Type.Boolean(),
     },
 };

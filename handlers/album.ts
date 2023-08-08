@@ -1,5 +1,5 @@
 import { MyHandlerMethod } from '.';
-import { GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
+import { CheckAlbumExistsSchema, GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
 
 export const GetAlbumListHandler = async function (req, reply) {
     const { page, count, search: keyword } = req.query;
@@ -25,3 +25,12 @@ export const GetAlbumHandler = async function (req, reply) {
 
     return { album };
 } as MyHandlerMethod<typeof GetAlbumSchema>;
+
+export const CheckAlbumExistsHandler = async function (req, reply) {
+    const { slug } = req.params;
+
+    const exists = await this.Album.exists({ slug }).lean();
+
+    reply.status(exists ? 200 : 404);
+    reply.send(exists != null);
+} as MyHandlerMethod<typeof CheckAlbumExistsSchema>;

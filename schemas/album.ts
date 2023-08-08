@@ -68,3 +68,9 @@ export const GetAlbumSchema = {
         }),
     },
 };
+export const CheckAlbumExistsSchema = {
+    params,
+    response: {
+        default: Type.Boolean(),
+    },
+};

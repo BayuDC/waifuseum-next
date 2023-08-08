@@ -1,6 +1,6 @@
 import { FastifyPluginCallback } from 'fastify';
-import { GetTagHandler, GetTagListHandler, GetTagListSimpleHandler } from '../handlers/tag';
-import { GetTagListSchema, GetTagListSimpleSchema, GetTagSchema } from '../schemas/tag';
+import { CheckTagExistsHandler, GetTagHandler, GetTagListHandler, GetTagListSimpleHandler } from '../handlers/tag';
+import { CheckTagExistsSchema, GetTagListSchema, GetTagListSimpleSchema, GetTagSchema } from '../schemas/tag';
 
 export default (function (fastify, options, done) {
     fastify.get('/tags', {
@@ -14,6 +14,10 @@ export default (function (fastify, options, done) {
     fastify.get('/tags/:slug', {
         schema: GetTagSchema,
         handler: GetTagHandler,
+    });
+    fastify.get('/tags/:slug/exists', {
+        schema: CheckTagExistsSchema,
+        handler: CheckTagExistsHandler,
     });
     done();
 } as FastifyPluginCallback);

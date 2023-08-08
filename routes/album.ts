@@ -1,7 +1,12 @@
 import { FastifyPluginCallback } from 'fastify';
 
-import { GetAlbumHandler, GetAlbumListHandler, GetAlbumListSimpleHandler } from '../handlers/album';
-import { GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
+import {
+    CheckAlbumExistsHandler,
+    GetAlbumHandler,
+    GetAlbumListHandler,
+    GetAlbumListSimpleHandler,
+} from '../handlers/album';
+import { CheckAlbumExistsSchema, GetAlbumListSchema, GetAlbumListSimpleSchema, GetAlbumSchema } from '../schemas/album';
 
 export default (function (fastify, options, done) {
     fastify.get('/albums', {
@@ -16,6 +21,10 @@ export default (function (fastify, options, done) {
     fastify.get('/albums/:slug', {
         schema: GetAlbumSchema,
         handler: GetAlbumHandler,
+    });
+    fastify.get('/albums/:slug/exists', {
+        schema: CheckAlbumExistsSchema,
+        handler: CheckAlbumExistsHandler,
     });
 
     done();
