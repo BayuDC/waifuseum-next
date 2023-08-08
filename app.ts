@@ -31,6 +31,7 @@ fastify.register(import('./plugins/model'));
 
 fastify.register(require('./routes/album'));
 fastify.register(require('./routes/picture'));
+fastify.register(require('./routes/tag'));
 fastify.get('/', async function (req) {
     return { message: 'Hello World!' };
 });
