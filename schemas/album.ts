@@ -1,4 +1,5 @@
 import { Type } from '@sinclair/typebox';
+import { TagSimpleSchema } from './tag';
 
 const AlbumSchema = Type.Object({
     id: Type.String(),
@@ -7,14 +8,7 @@ const AlbumSchema = Type.Object({
     slug: Type.String(),
     private: Type.Boolean(),
     community: Type.Boolean(),
-    tags: Type.Array(
-        Type.Object({
-            id: Type.String(),
-            name: Type.String(),
-            alias: Type.String(),
-            slug: Type.String(),
-        })
-    ),
+    tags: Type.Array(TagSimpleSchema),
     picturesCount: Type.Number(),
     pictures: Type.Array(
         Type.Object({

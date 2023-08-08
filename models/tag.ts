@@ -1,7 +1,9 @@
-import { prop, getModelForClass, Ref } from '@typegoose/typegoose';
+import { prop, getModelForClass, types, plugin } from '@typegoose/typegoose';
 
 import { User } from './user';
+import { Album } from './album';
 
+@plugin(require('mongoose-lean-id'))
 export class Tag {
     @prop()
     public name!: string;
@@ -12,8 +14,11 @@ export class Tag {
     @prop()
     public slug!: string;
 
+    @prop({ ref: () => Album, select: false })
+    public albums!: types.Ref<Album>[];
+
     @prop({ ref: () => User })
-    public createdBy!: Ref<User>;
+    public createdBy!: types.Ref<User>;
 
     @prop()
     public createdAt!: Date;
