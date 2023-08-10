@@ -1,7 +1,17 @@
 import { FastifyPluginCallback } from 'fastify';
 
-import { GetPictureListSchema, GetPictureListTodaySchema, GetPixivPictureSchema } from '../schemas/picture';
-import { GetPictureListHandler, GetPictureListTodayHandler, GetPixivPictureHandler } from '../handlers/picture';
+import {
+    GetPictureListSchema,
+    GetPictureListTodaySchema,
+    GetPictureSchema,
+    GetPixivPictureSchema,
+} from '../schemas/picture';
+import {
+    GetPictureHandler,
+    GetPictureListHandler,
+    GetPictureListTodayHandler,
+    GetPixivPictureHandler,
+} from '../handlers/picture';
 import { LoadAlbumPreHandler } from '../handlers/album';
 import { LoadTagPreHandler } from '../handlers/tag';
 
@@ -14,6 +24,10 @@ export default (function (fastify, options, done) {
     fastify.get('/pictures/today', {
         schema: GetPictureListTodaySchema,
         handler: GetPictureListTodayHandler,
+    });
+    fastify.get('/pictures/:id', {
+        schema: GetPictureSchema,
+        handler: GetPictureHandler,
     });
     fastify.get('/pictures/pixiv/:id', {
         schema: GetPixivPictureSchema,

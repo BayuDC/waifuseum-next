@@ -2,7 +2,13 @@ import download from 'download';
 import { parse } from 'node-html-parser';
 
 import { MyHandlerMethod } from './_';
-import { GetPictureListSchema, GetPictureListTodaySchema, GetPixivPictureSchema } from '../schemas/picture';
+import {
+    GetPictureListSchema,
+    GetPictureListTodaySchema,
+    GetPictureSchema,
+    GetPixivPictureSchema,
+} from '../schemas/picture';
+import { isValidObjectId } from 'mongoose';
 
 const dayInMs = 24 * 60 * 60 * 1000;
 
@@ -60,3 +66,16 @@ export const GetPixivPictureHandler = async function (req, reply) {
 
     return { source, urls: data.illust[id].urls };
 } as MyHandlerMethod<typeof GetPixivPictureSchema>;
+
+export const GetPictureHandler = async function (req, reply) {
+    const { id } = req.params;
+    if (!isValidObjectId(id)) throw reply.imateapot('Picture id is not valid');
+
+    const picture = await this.Picture.findById(id)
+        .preload()
+        .populate('createdBy', ['id', 'name'])
+        .lean({ getters: true });
+    if (!picture) throw reply.notFound('Picture not found');
+
+    return { picture };
+} as MyHandlerMethod<typeof GetPictureSchema>;
