@@ -18,6 +18,12 @@ const PictureSchema = Type.Object({
         })
     ),
     source: Type.Optional(Type.String()),
+    createdBy: Type.Optional(
+        Type.Object({
+            id: Type.String(),
+            name: Type.String(),
+        })
+    ),
     createdAt: Type.String(),
     updatedAt: Type.String(),
 });
@@ -68,6 +74,16 @@ export const GetPictureListTodaySchema = {
         '2xx': Type.Object({
             picturesCount: Type.Number(),
             pictures: Type.Array(PictureSchema),
+        }),
+    },
+};
+export const GetPictureSchema = {
+    params: Type.Object({
+        id: Type.String(),
+    }),
+    response: {
+        '2xx': Type.Object({
+            picture: PictureSchema,
         }),
     },
 };
