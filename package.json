@@ -1,7 +1,5 @@
 {
-  "name": "waifuseum-lite",
-  "version": "0.0.0",
-  "description": "Waifuseum api but smaller and faster",
+  "name": "waifuseum-next",
   "scripts": {
     "start": "node build/app",
     "dev": "ts-node -r dotenv/config app",
