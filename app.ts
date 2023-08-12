@@ -29,12 +29,10 @@ fastify.register(import('./plugins/error'));
 fastify.register(import('./plugins/state'));
 fastify.register(import('./plugins/model'));
 
+fastify.register(require('./routes/main'));
 fastify.register(require('./routes/album'));
 fastify.register(require('./routes/picture'));
 fastify.register(require('./routes/tag'));
-fastify.get('/', async function (req) {
-    return { message: 'Hello World!' };
-});
 
 fastify.listen({ port: port as number, host }, (err, addr) => {
     if (err) {
